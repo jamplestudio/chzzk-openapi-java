@@ -2,7 +2,6 @@ package com.jamplestudio.coj.protocol.http.executors;
 
 import com.jamplestudio.coj.protocol.data.LiveSearchRequest;
 import com.jamplestudio.coj.protocol.data.LiveSearchResponse;
-import com.jamplestudio.coj.protocol.http.HttpRequestExecutor;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 

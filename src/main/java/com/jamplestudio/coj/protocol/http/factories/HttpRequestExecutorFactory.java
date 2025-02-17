@@ -1,5 +1,6 @@
-package com.jamplestudio.coj.protocol.http;
+package com.jamplestudio.coj.protocol.http.factories;
 
+import com.jamplestudio.coj.protocol.http.executors.HttpRequestExecutor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

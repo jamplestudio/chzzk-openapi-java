@@ -2,7 +2,6 @@ package com.jamplestudio.coj.protocol.http.executors;
 
 import com.jamplestudio.coj.protocol.data.ChannelInformationRequest;
 import com.jamplestudio.coj.protocol.data.ChannelInformationResponse;
-import com.jamplestudio.coj.protocol.http.HttpRequestExecutor;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 
