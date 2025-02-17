@@ -1,8 +1,8 @@
-package com.jamplestudio.coj.protocol.http.factories;
+package com.jamplestudio.coj.protocol.http.factory;
 
 import com.google.common.collect.Maps;
-import com.jamplestudio.coj.protocol.http.executors.HttpRequestExecutor;
-import com.jamplestudio.coj.protocol.http.executors.*;
+import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
+import com.jamplestudio.coj.protocol.http.executor.okhttp.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class HttpRequestExecutorFactoryV1 implements HttpRequestExecutorFactory {
 
-    private final @NotNull Map<String, Class<? extends HttpRequestExecutor<?, ?>>> types = Maps.newHashMap();
+    private final @NotNull Map<String, Class<? extends HttpRequestExecutor<?, ?, ?>>> types = Maps.newHashMap();
 
     {
         types.put("access_token_grant", AccessTokenGrantExecutor.class);
@@ -34,8 +34,8 @@ public class HttpRequestExecutorFactoryV1 implements HttpRequestExecutorFactory 
     }
 
     @Override
-    public <Request, Response> @NotNull Optional<HttpRequestExecutor<Request, Response>> create(@NotNull String type) {
-        HttpRequestExecutor<Request, Response> executor;
+    public <Request, Response, HttpClient> @NotNull Optional<HttpRequestExecutor<Request, Response, HttpClient>> create(@NotNull String type) {
+        HttpRequestExecutor<Request, Response, HttpClient> executor;
         try {
             executor = createInstance(type);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
@@ -45,15 +45,15 @@ public class HttpRequestExecutorFactoryV1 implements HttpRequestExecutorFactory 
     }
 
     @SuppressWarnings("unchecked")
-    private <Request, Response> @Nullable HttpRequestExecutor<Request, Response> createInstance(String type)
+    private <Request, Response, HttpClient> @Nullable HttpRequestExecutor<Request, Response, HttpClient> createInstance(String type)
             throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Class<? extends HttpRequestExecutor<?, ?>> clazz = types.get(type);
+        Class<? extends HttpRequestExecutor<?, ?, ?>> clazz = types.get(type);
         if (clazz == null) {
             return null;
         }
 
         Constructor<?> constructor = clazz.getDeclaredConstructor();
-        return (HttpRequestExecutor<Request, Response>) constructor.newInstance();
+        return (HttpRequestExecutor<Request, Response, HttpClient>) constructor.newInstance();
     }
 
 }
