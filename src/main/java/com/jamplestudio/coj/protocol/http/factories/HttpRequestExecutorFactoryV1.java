@@ -1,7 +1,8 @@
-package com.jamplestudio.coj.protocol.http;
+package com.jamplestudio.coj.protocol.http.factories;
 
 import com.google.common.collect.Maps;
-import com.jamplestudio.coj.protocol.http.executors.HttpRequestExecutor;
+import com.jamplestudio.coj.protocol.http.HttpRequestExecutor;
+import com.jamplestudio.coj.protocol.http.HttpRequestExecutorFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

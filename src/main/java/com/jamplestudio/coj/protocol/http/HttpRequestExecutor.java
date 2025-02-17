@@ -1,4 +1,4 @@
-package com.jamplestudio.coj.protocol.http.executors;
+package com.jamplestudio.coj.protocol.http;
 
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
