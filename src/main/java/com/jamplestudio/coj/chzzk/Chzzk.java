@@ -1,15 +1,24 @@
 package com.jamplestudio.coj.chzzk;
 
+import com.jamplestudio.coj.protocol.http.server.ChzzkAuthSession;
 import org.jetbrains.annotations.NotNull;
 
 public interface Chzzk {
 
-    static @NotNull Chzzk of(@NotNull String clientId, @NotNull String clientSecret) {
-        return new ChzzkImpl(clientId, clientSecret);
+    static @NotNull ChzzkBuilder builder() {
+        return new ChzzkBuilder();
     }
 
     @NotNull String getClientId();
 
     @NotNull String getClientSecret();
+
+    @NotNull String getRedirectUri();
+
+    @NotNull String getHost();
+
+    int getPort();
+
+    @NotNull ChzzkAuthSession getSession();
 
 }
