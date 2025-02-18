@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class ChzzkAuthSessionImpl implements ChzzkAuthSession {
+public class ChzzkAuthServerImpl implements ChzzkAuthServer {
 
     private final UUID uniqueId = UUID.randomUUID();
 
@@ -22,7 +22,7 @@ public class ChzzkAuthSessionImpl implements ChzzkAuthSession {
 
     private final @NotNull Chzzk chzzk;
 
-    public ChzzkAuthSessionImpl(@NotNull Chzzk chzzk) {
+    public ChzzkAuthServerImpl(@NotNull Chzzk chzzk) {
         this.chzzk = chzzk;
     }
 

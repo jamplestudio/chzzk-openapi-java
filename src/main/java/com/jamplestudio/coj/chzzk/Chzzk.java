@@ -1,6 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.protocol.http.server.ChzzkAuthSession;
+import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
 import org.jetbrains.annotations.NotNull;
 
 public interface Chzzk {
@@ -19,6 +19,6 @@ public interface Chzzk {
 
     int getPort();
 
-    @NotNull ChzzkAuthSession getSession();
+    @NotNull ChzzkAuthServer getSession();
 
 }

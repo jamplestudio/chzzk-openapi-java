@@ -1,7 +1,7 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.protocol.http.server.ChzzkAuthSession;
-import com.jamplestudio.coj.protocol.http.server.ChzzkAuthSessionImpl;
+import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
+import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServerImpl;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -16,7 +16,7 @@ public class ChzzkImpl implements Chzzk {
     private final @NotNull String host;
     private final @Range(from = 0, to = 65535) int port;
 
-    private final @NotNull ChzzkAuthSession session;
+    private final @NotNull ChzzkAuthServer session;
 
     ChzzkImpl(
             @NotNull String clientId, @NotNull String clientSecret,
@@ -29,7 +29,7 @@ public class ChzzkImpl implements Chzzk {
         this.host = host;
         this.port = port;
 
-        this.session = new ChzzkAuthSessionImpl(this);
+        this.session = new ChzzkAuthServerImpl(this);
     }
 
 }
