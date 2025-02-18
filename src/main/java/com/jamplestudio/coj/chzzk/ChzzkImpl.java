@@ -1,7 +1,5 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
-import com.jamplestudio.coj.protocol.http.client.OkHttpChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
 import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactoryV1;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
