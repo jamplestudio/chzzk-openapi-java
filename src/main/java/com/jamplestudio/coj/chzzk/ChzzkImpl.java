@@ -1,5 +1,9 @@
 package com.jamplestudio.coj.chzzk;
 
+import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
+import com.jamplestudio.coj.protocol.http.client.OkHttpChzzkHttpClient;
+import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
+import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactoryV1;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServerImpl;
 import lombok.Getter;
@@ -16,7 +20,8 @@ public class ChzzkImpl implements Chzzk {
     private final @NotNull String host;
     private final @Range(from = 0, to = 65535) int port;
 
-    private final @NotNull ChzzkAuthServer session;
+    private final @NotNull ChzzkAuthServer server;
+    private final @NotNull HttpRequestExecutorFactory httpRequestExecutorFactory;
 
     ChzzkImpl(
             @NotNull String clientId, @NotNull String clientSecret,
@@ -29,7 +34,8 @@ public class ChzzkImpl implements Chzzk {
         this.host = host;
         this.port = port;
 
-        this.session = new ChzzkAuthServerImpl(this);
+        this.server = new ChzzkAuthServerImpl(this);
+        this.httpRequestExecutorFactory = new HttpRequestExecutorFactoryV1();
     }
 
 }
