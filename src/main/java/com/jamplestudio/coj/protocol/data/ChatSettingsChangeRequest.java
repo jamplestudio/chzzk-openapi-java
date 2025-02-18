@@ -6,6 +6,7 @@ public record ChatSettingsChangeRequest(
         @NotNull String chatAvailableCondition,
         @NotNull String chatAvailableGroup,
         int minFollowerMinute,
-        boolean allowSubscriberInFollowerMode
+        boolean allowSubscriberInFollowerMode,
+        @NotNull String accessToken
 ) {
 }

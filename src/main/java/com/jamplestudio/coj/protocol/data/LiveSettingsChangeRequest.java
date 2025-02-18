@@ -8,6 +8,7 @@ public record LiveSettingsChangeRequest(
         @NotNull String defaultLiveTitle,
         @NotNull String categoryType,
         @NotNull String categoryId,
-        @NotNull List<String> tags
+        @NotNull List<String> tags,
+        @NotNull String accessToken
 ) {
 }
