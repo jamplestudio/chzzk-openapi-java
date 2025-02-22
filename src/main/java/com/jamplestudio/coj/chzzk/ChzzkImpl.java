@@ -203,4 +203,22 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
         executor.map(it -> it.execute(httpClient, requestInst));
     }
 
+    @Override
+    public @NotNull CompletableFuture<Optional<ChzzkChatMessageSendResult>> sendChatMessageAsync(@NotNull String message) {
+        return CompletableFuture.supplyAsync(() -> sendChatMessage(message));
+    }
+
+    @Override
+    public @NotNull Optional<ChzzkChatMessageSendResult> sendChatMessage(@NotNull String message) {
+        Optional<HttpRequestExecutor<ChatMessageSendRequest, ChatMessageSendResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("chat_message_send");
+
+        ChatMessageSendRequest requestInst = new ChatMessageSendRequest(message, token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(it -> ChzzkChatMessageSendResult.of(it.messageId(), message));
+    }
+
 }

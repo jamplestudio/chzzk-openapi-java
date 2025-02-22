@@ -64,4 +64,8 @@ public interface Chzzk {
 
     void setChatAnnouncementById(@NotNull String messageId);
 
+    @NotNull CompletableFuture<Optional<ChzzkChatMessageSendResult>> sendChatMessageAsync(@NotNull String message);
+
+    @NotNull Optional<ChzzkChatMessageSendResult> sendChatMessage(@NotNull String message);
+
 }
