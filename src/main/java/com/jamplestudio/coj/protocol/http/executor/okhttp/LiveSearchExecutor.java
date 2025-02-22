@@ -1,6 +1,5 @@
 package com.jamplestudio.coj.protocol.http.executor.okhttp;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jamplestudio.coj.protocol.data.LiveSearchRequest;
 import com.jamplestudio.coj.protocol.data.LiveSearchResponse;

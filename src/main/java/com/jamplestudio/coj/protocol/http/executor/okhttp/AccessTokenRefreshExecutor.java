@@ -1,7 +1,6 @@
 package com.jamplestudio.coj.protocol.http.executor.okhttp;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.jamplestudio.coj.protocol.data.AccessTokenRefreshRequest;
 import com.jamplestudio.coj.protocol.data.AccessTokenRefreshResponse;
@@ -9,7 +8,10 @@ import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
 import com.jamplestudio.coj.utils.Constants;
 import com.jamplestudio.coj.utils.HttpResponseParser;
-import okhttp3.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
