@@ -64,11 +64,11 @@ public interface Chzzk {
 
     @NotNull List<ChzzkLiveSearchResult> searchLiveStreams(@Range(from = 1, to = 50) int amount, @NotNull String next);
 
-    void setChatAnnouncementByMessageAsync(@NotNull String message);
+    @NotNull CompletableFuture<Void> setChatAnnouncementByMessageAsync(@NotNull String message);
 
     void setChatAnnouncementByMessage(@NotNull String message);
 
-    void setChatAnnouncementByIdAsync(@NotNull String messageId);
+    @NotNull CompletableFuture<Void> setChatAnnouncementByIdAsync(@NotNull String messageId);
 
     void setChatAnnouncementById(@NotNull String messageId);
 
@@ -80,8 +80,16 @@ public interface Chzzk {
 
     @NotNull Optional<ChzzkChatSettings> getChatSettings();
 
-    void setChatSettingsAsync(@NotNull ChzzkChatSettings settings);
+    @NotNull CompletableFuture<Void> setChatSettingsAsync(@NotNull ChzzkChatSettings settings);
 
     void setChatSettings(@NotNull ChzzkChatSettings settings);
+
+    @NotNull CompletableFuture<Optional<ChzzkLiveSettings>> getLiveSettingsAsync();
+
+    @NotNull Optional<ChzzkLiveSettings> getLiveSettings();
+
+    @NotNull CompletableFuture<Void> setLiveSettingsAsync(@NotNull ChzzkLiveSettings settings);
+
+    void setLiveSettings(@NotNull ChzzkLiveSettings settings);
 
 }

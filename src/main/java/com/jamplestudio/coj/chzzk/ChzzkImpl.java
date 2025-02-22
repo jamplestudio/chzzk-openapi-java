@@ -209,8 +209,8 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
     }
 
     @Override
-    public void setChatAnnouncementByMessageAsync(@NotNull String message) {
-        CompletableFuture.runAsync(() -> setChatAnnouncementByMessage(message));
+    public @NotNull CompletableFuture<Void> setChatAnnouncementByMessageAsync(@NotNull String message) {
+        return CompletableFuture.runAsync(() -> setChatAnnouncementByMessage(message));
     }
 
     @Override
@@ -223,8 +223,8 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
     }
 
     @Override
-    public void setChatAnnouncementByIdAsync(@NotNull String messageId) {
-        CompletableFuture.runAsync(() -> setChatAnnouncementById(messageId));
+    public @NotNull CompletableFuture<Void> setChatAnnouncementByIdAsync(@NotNull String messageId) {
+        return CompletableFuture.runAsync(() -> setChatAnnouncementById(messageId));
     }
 
     @Override
@@ -273,8 +273,8 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
     }
 
     @Override
-    public void setChatSettingsAsync(@NotNull ChzzkChatSettings settings) {
-        CompletableFuture.runAsync(() -> setChatSettings(settings));
+    public @NotNull CompletableFuture<Void> setChatSettingsAsync(@NotNull ChzzkChatSettings settings) {
+        return CompletableFuture.runAsync(() -> setChatSettings(settings));
     }
 
     @Override
@@ -287,6 +287,42 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
                 settings.getChatAvailableGroup().toString(),
                 settings.getMinimumFollowerTimeInMinutes(),
                 settings.isSubscriberAllowedInFollowerMode(),
+                token.accessToken()
+        );
+        executor.map(it -> it.execute(httpClient, requestInst));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Optional<ChzzkLiveSettings>> getLiveSettingsAsync() {
+        return CompletableFuture.supplyAsync(this::getLiveSettings);
+    }
+
+    @Override
+    public @NotNull Optional<ChzzkLiveSettings> getLiveSettings() {
+        Optional<HttpRequestExecutor<LiveSettingsRequest, LiveSettingsResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("live_settings");
+
+        LiveSettingsRequest requestInst = new LiveSettingsRequest(token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ChzzkLiveSettings::of);
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Void> setLiveSettingsAsync(@NotNull ChzzkLiveSettings settings) {
+        return CompletableFuture.runAsync(() -> setLiveSettings(settings));
+    }
+
+    @Override
+    public void setLiveSettings(@NotNull ChzzkLiveSettings settings) {
+        Optional<HttpRequestExecutor<LiveSettingsChangeRequest, Void, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("live_settings_change");
+
+        LiveSettingsChangeRequest requestInst = new LiveSettingsChangeRequest(
+                settings.getLiveTitle(), settings.getCategoryType().toString(),
+                settings.getCategoryId(), settings.getTags(),
                 token.accessToken()
         );
         executor.map(it -> it.execute(httpClient, requestInst));
