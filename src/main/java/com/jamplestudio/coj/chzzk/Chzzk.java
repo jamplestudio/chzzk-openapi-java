@@ -4,6 +4,8 @@ import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -34,5 +36,13 @@ public interface Chzzk {
     @NotNull Optional<ChzzkChannel> getCurrentChannel();
 
     @NotNull CompletableFuture<Optional<ChzzkChannel>> getCurrentChannelAsync();
+
+    @NotNull Optional<ChzzkChannel> getChannel(@NotNull String channelId);
+
+    @NotNull CompletableFuture<Optional<ChzzkChannel>> getChannelAsync(@NotNull String channelId);
+
+    @NotNull List<ChzzkChannel> getChannels(@NotNull Collection<String> channelIds);
+
+    @NotNull CompletableFuture<List<ChzzkChannel>> getChannelsAsync(@NotNull Collection<String> channelIds);
 
 }

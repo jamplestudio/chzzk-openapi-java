@@ -16,6 +16,8 @@ import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -76,11 +78,22 @@ public class ChzzkImpl implements Chzzk {
 
     @Override
     public @NotNull CompletableFuture<Optional<ChzzkChannel>> getCurrentChannelAsync() {
+        //TODO: 현재 채널 아이디 입력할 것
+        return getChannelAsync("current-channel-id");
+    }
+
+    @Override
+    public @NotNull Optional<ChzzkChannel> getChannel(@NotNull String channelId) {
+        return getChannelAsync(channelId).join();
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Optional<ChzzkChannel>> getChannelAsync(@NotNull String channelId) {
         return CompletableFuture.supplyAsync(() -> {
             Optional<HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient>> executor =
                     httpRequestExecutorFactory.create("channel_information");
 
-            ChannelInformationRequest requestInst = new ChannelInformationRequest(Lists.newArrayList(""), "");
+            ChannelInformationRequest requestInst = new ChannelInformationRequest(Lists.newArrayList(channelId), "");
             return executor
                     .map(it -> it.execute(httpClient, requestInst))
                     .filter(Optional::isPresent)
@@ -91,4 +104,27 @@ public class ChzzkImpl implements Chzzk {
         });
     }
 
+    @Override
+    public @NotNull List<ChzzkChannel> getChannels(@NotNull Collection<String> channelIds) {
+        return getChannelsAsync(channelIds).join();
+    }
+
+    @Override
+    public @NotNull CompletableFuture<List<ChzzkChannel>> getChannelsAsync(@NotNull Collection<String> channelIds) {
+        return CompletableFuture.supplyAsync(() -> {
+            Optional<HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient>> executor =
+                    httpRequestExecutorFactory.create("channel_information");
+
+            ChannelInformationRequest requestInst = new ChannelInformationRequest(Lists.newArrayList(channelIds), "");
+            return executor
+                    .map(it -> it.execute(httpClient, requestInst))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .map(ChannelInformationResponse::data)
+                    .orElse(Lists.newArrayList())
+                    .stream()
+                    .map(ChzzkChannel::of)
+                    .toList();
+        });
+    }
 }
