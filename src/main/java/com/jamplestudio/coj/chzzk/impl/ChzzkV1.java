@@ -3,6 +3,7 @@ package com.jamplestudio.coj.chzzk.impl;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.jamplestudio.coj.chzzk.*;
+import com.jamplestudio.coj.exception.InvalidTokenException;
 import com.jamplestudio.coj.net.data.*;
 import com.jamplestudio.coj.net.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.net.http.executor.HttpRequestExecutor;
@@ -58,6 +59,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public void refreshToken() {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<AccessTokenRefreshRequest, AccessTokenRefreshResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("access_token_refresh");
 
@@ -80,6 +85,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public void revokeToken() {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<AccessTokenRevokeRequest, Void, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("access_token_revoke");
 
@@ -104,6 +113,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public @NotNull Optional<ChzzkUser> getCurrentUser() {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<UserInformationRequest, UserInformationResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("user_information");
 
@@ -132,6 +145,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public @NotNull Optional<ChzzkChannel> getChannel(@NotNull String channelId) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("channel_information");
 
@@ -152,6 +169,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public @NotNull List<ChzzkChannel> getChannels(@NotNull Collection<String> channelIds) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("channel_information");
 
@@ -176,6 +197,9 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
     @Override
     public @NotNull List<ChzzkCategorySearchResult> searchCategories(
             @NotNull String categoryName, @Range(from = 1, to = 50) int amount) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
 
         Optional<HttpRequestExecutor<CategorySearchRequest, CategorySearchResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("channel_information");
@@ -209,6 +233,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public @NotNull List<ChzzkLiveSearchResult> searchLiveStreams(@Range(from = 1, to = 50) int amount, @NotNull String next) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<LiveSearchRequest, LiveSearchResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("live_search");
 
@@ -232,6 +260,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public void setChatAnnouncementByMessage(@NotNull String message) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<ChatAnnouncementSetRequest, Void, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("channel_information");
 
@@ -246,6 +278,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public void setChatAnnouncementById(@NotNull String messageId) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<ChatAnnouncementSetRequest, Void, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("channel_information");
 
@@ -260,6 +296,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public @NotNull Optional<ChzzkChatMessageSendResult> sendChatMessage(@NotNull String message) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<ChatMessageSendRequest, ChatMessageSendResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("chat_message_send");
 
@@ -278,6 +318,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public @NotNull Optional<ChzzkChatSettings> getChatSettings() {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<ChatSettingsRequest, ChatSettingsResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("chat_settings");
 
@@ -296,6 +340,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public void setChatSettings(@NotNull ChzzkChatSettings settings) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<ChatSettingsChangeRequest, Void, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("chat_settings_change");
 
@@ -316,6 +364,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public @NotNull Optional<ChzzkLiveSettings> getLiveSettings() {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<LiveSettingsRequest, LiveSettingsResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("live_settings");
 
@@ -334,6 +386,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public void setLiveSettings(@NotNull ChzzkLiveSettings settings) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<LiveSettingsChangeRequest, Void, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("live_settings_change");
 
@@ -352,6 +408,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public @NotNull Optional<ChzzkLiveStreamKey> getLiveStreamKey() {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
         Optional<HttpRequestExecutor<LiveStreamKeyRequest, LiveStreamKeyResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("live_stream_key");
 
