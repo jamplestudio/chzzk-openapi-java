@@ -33,7 +33,7 @@ public class LiveSearchExecutor implements HttpRequestExecutor<LiveSearchRequest
         Request request = new Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("Authorization", "Bearer " + "YOUR_ACCESS_TOKEN")
+                .addHeader("Authorization", "Bearer " + requestInst.accessToken())
                 .addHeader("Content-Type", "application/json")
                 .build();
 

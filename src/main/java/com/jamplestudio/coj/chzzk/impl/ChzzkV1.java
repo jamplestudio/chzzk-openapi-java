@@ -240,7 +240,7 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
         Optional<HttpRequestExecutor<LiveSearchRequest, LiveSearchResponse, OkHttpClient>> executor =
                 httpRequestExecutorFactory.create("live_search");
 
-        LiveSearchRequest requestInst = new LiveSearchRequest(amount, next);
+        LiveSearchRequest requestInst = new LiveSearchRequest(amount, next, token.accessToken());
         List<ChzzkLiveSearchResult> results = Lists.newArrayList();
         executor.map(it -> it.execute(httpClient, requestInst))
                 .filter(Optional::isPresent)
