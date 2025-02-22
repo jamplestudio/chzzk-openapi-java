@@ -6,12 +6,12 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class ChzzkUserImpl implements ChzzkUser {
 
-    private final @NotNull String channelId;
-    private final @NotNull String channelName;
+    private final @NotNull String id;
+    private final @NotNull String name;
 
-    ChzzkUserImpl(@NotNull String channelId, @NotNull String channelName) {
-        this.channelId = channelId;
-        this.channelName = channelName;
+    ChzzkUserImpl(@NotNull String id, @NotNull String name) {
+        this.id = id;
+        this.name = name;
     }
 
 }

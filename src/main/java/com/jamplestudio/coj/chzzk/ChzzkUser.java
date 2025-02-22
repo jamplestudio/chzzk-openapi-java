@@ -13,8 +13,8 @@ public interface ChzzkUser {
         return new ChzzkUserImpl(id, name);
     }
 
-    @NotNull String getChannelId();
+    @NotNull String getId();
 
-    @NotNull String getChannelName();
+    @NotNull String getName();
 
 }
