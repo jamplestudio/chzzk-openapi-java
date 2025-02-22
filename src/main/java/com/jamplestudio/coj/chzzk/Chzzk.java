@@ -32,20 +32,20 @@ public interface Chzzk {
 
     @NotNull ChzzkToken getToken();
 
-    @NotNull Optional<ChzzkUser> getCurrentUser();
-
     @NotNull CompletableFuture<Optional<ChzzkUser>> getCurrentUserAsync();
 
-    @NotNull Optional<ChzzkChannel> getCurrentChannel();
+    @NotNull Optional<ChzzkUser> getCurrentUser();
 
     @NotNull CompletableFuture<Optional<ChzzkChannel>> getCurrentChannelAsync();
 
-    @NotNull Optional<ChzzkChannel> getChannel(@NotNull String channelId);
+    @NotNull Optional<ChzzkChannel> getCurrentChannel();
 
     @NotNull CompletableFuture<Optional<ChzzkChannel>> getChannelAsync(@NotNull String channelId);
 
-    @NotNull List<ChzzkChannel> getChannels(@NotNull Collection<String> channelIds);
+    @NotNull Optional<ChzzkChannel> getChannel(@NotNull String channelId);
 
     @NotNull CompletableFuture<List<ChzzkChannel>> getChannelsAsync(@NotNull Collection<String> channelIds);
+
+    @NotNull List<ChzzkChannel> getChannels(@NotNull Collection<String> channelIds);
 
 }

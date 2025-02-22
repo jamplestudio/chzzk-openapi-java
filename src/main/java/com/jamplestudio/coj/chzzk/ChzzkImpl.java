@@ -57,79 +57,73 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
     }
 
     @Override
-    public @NotNull Optional<ChzzkUser> getCurrentUser() {
-        return getCurrentUserAsync().join();
-    }
-
-    @Override
     public @NotNull CompletableFuture<Optional<ChzzkUser>> getCurrentUserAsync() {
-        return CompletableFuture.supplyAsync(() -> {
-            Optional<HttpRequestExecutor<UserInformationRequest, UserInformationResponse, OkHttpClient>> executor =
-                    httpRequestExecutorFactory.create("user_information");
-
-            UserInformationRequest requestInst = new UserInformationRequest("");
-            return executor
-                    .map(it -> it.execute(httpClient, requestInst))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .map(ChzzkUser::of);
-        });
+        return CompletableFuture.supplyAsync(this::getCurrentUser);
     }
 
     @Override
-    public @NotNull Optional<ChzzkChannel> getCurrentChannel() {
-        return getCurrentChannelAsync().join();
+    public @NotNull Optional<ChzzkUser> getCurrentUser() {
+        Optional<HttpRequestExecutor<UserInformationRequest, UserInformationResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("user_information");
+
+        UserInformationRequest requestInst = new UserInformationRequest(token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ChzzkUser::of);
     }
 
     @Override
     public @NotNull CompletableFuture<Optional<ChzzkChannel>> getCurrentChannelAsync() {
-        //TODO: 현재 채널 아이디 입력할 것
-        return getChannelAsync("current-channel-id");
+        return CompletableFuture.supplyAsync(this::getCurrentChannel);
     }
 
     @Override
-    public @NotNull Optional<ChzzkChannel> getChannel(@NotNull String channelId) {
-        return getChannelAsync(channelId).join();
+    public @NotNull Optional<ChzzkChannel> getCurrentChannel() {
+        return getCurrentUser().flatMap(chzzkUser -> getChannel(chzzkUser.getId()));
     }
 
     @Override
     public @NotNull CompletableFuture<Optional<ChzzkChannel>> getChannelAsync(@NotNull String channelId) {
-        return CompletableFuture.supplyAsync(() -> {
-            Optional<HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient>> executor =
-                    httpRequestExecutorFactory.create("channel_information");
-
-            ChannelInformationRequest requestInst = new ChannelInformationRequest(Lists.newArrayList(channelId), "");
-            return executor
-                    .map(it -> it.execute(httpClient, requestInst))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .filter(it -> !it.data().isEmpty())
-                    .map(it -> it.data().getFirst())
-                    .map(ChzzkChannel::of);
-        });
+        return CompletableFuture.supplyAsync(() -> getChannel(channelId));
     }
 
     @Override
-    public @NotNull List<ChzzkChannel> getChannels(@NotNull Collection<String> channelIds) {
-        return getChannelsAsync(channelIds).join();
+    public @NotNull Optional<ChzzkChannel> getChannel(@NotNull String channelId) {
+        Optional<HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("channel_information");
+
+        ChannelInformationRequest requestInst = new ChannelInformationRequest(Lists.newArrayList(channelId), token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(it -> !it.data().isEmpty())
+                .map(it -> it.data().getFirst())
+                .map(ChzzkChannel::of);
     }
 
     @Override
     public @NotNull CompletableFuture<List<ChzzkChannel>> getChannelsAsync(@NotNull Collection<String> channelIds) {
-        return CompletableFuture.supplyAsync(() -> {
-            Optional<HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient>> executor =
-                    httpRequestExecutorFactory.create("channel_information");
-
-            ChannelInformationRequest requestInst = new ChannelInformationRequest(Lists.newArrayList(channelIds), "");
-            return executor
-                    .map(it -> it.execute(httpClient, requestInst))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .map(ChannelInformationResponse::data)
-                    .orElse(Lists.newArrayList())
-                    .stream()
-                    .map(ChzzkChannel::of)
-                    .toList();
-        });
+        return CompletableFuture.supplyAsync(() -> getChannels(channelIds));
     }
+
+    @Override
+    public @NotNull List<ChzzkChannel> getChannels(@NotNull Collection<String> channelIds) {
+        Optional<HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("channel_information");
+
+        ChannelInformationRequest requestInst = new ChannelInformationRequest(Lists.newArrayList(channelIds), token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ChannelInformationResponse::data)
+                .orElse(Lists.newArrayList())
+                .stream()
+                .map(ChzzkChannel::of)
+                .toList();
+    }
+
 }
