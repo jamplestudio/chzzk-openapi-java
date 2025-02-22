@@ -176,6 +176,39 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
     }
 
     @Override
+    public @NotNull CompletableFuture<List<ChzzkLiveSearchResult>> searchLiveStreamsAsync(@Range(from = 1, to = 50) int amount) {
+        return CompletableFuture.supplyAsync(() -> searchLiveStreams(amount));
+    }
+
+    @Override
+    public @NotNull List<ChzzkLiveSearchResult> searchLiveStreams(@Range(from = 1, to = 50) int amount) {
+        return searchLiveStreams(amount, "");
+    }
+
+    @Override
+    public @NotNull CompletableFuture<List<ChzzkLiveSearchResult>> searchLiveStreamsAsync(@Range(from = 1, to = 50) int amount, @NotNull String next) {
+        return CompletableFuture.supplyAsync(() -> searchLiveStreams(amount, next));
+    }
+
+    @Override
+    public @NotNull List<ChzzkLiveSearchResult> searchLiveStreams(@Range(from = 1, to = 50) int amount, @NotNull String next) {
+        Optional<HttpRequestExecutor<LiveSearchRequest, LiveSearchResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("live_search");
+
+        LiveSearchRequest requestInst = new LiveSearchRequest(amount, next);
+        List<ChzzkLiveSearchResult> results = Lists.newArrayList();
+        executor.map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .ifPresent(it -> {
+                    it.data().forEach(data -> {
+                        ChzzkLiveSearchResult result = ChzzkLiveSearchResult.of(data, it.page());
+                    });
+                });
+        return results;
+    }
+
+    @Override
     public void setChatAnnouncementByMessageAsync(@NotNull String message) {
         CompletableFuture.runAsync(() -> setChatAnnouncementByMessage(message));
     }

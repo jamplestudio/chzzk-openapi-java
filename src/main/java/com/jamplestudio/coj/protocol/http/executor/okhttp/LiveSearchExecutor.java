@@ -24,7 +24,9 @@ public class LiveSearchExecutor implements HttpRequestExecutor<LiveSearchRequest
 
         HttpUrl.Builder builder = HttpUrl.get(Constants.OPENAPI_URL + "/open/v1/lives").newBuilder();
         builder.addQueryParameter("size", Integer.toString(requestInst.size()));
-        builder.addQueryParameter("next", requestInst.next());
+        if (!requestInst.next().isEmpty()) {
+            builder.addQueryParameter("next", requestInst.next());
+        }
 
         HttpUrl url = builder.build();
 

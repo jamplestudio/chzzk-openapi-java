@@ -16,7 +16,13 @@ public record LiveSearchResponse(
             int concurrentUserCount,
             @NotNull String openDate,
             boolean adult,
-            @NotNull List<String> tags
+            @NotNull List<String> tags,
+            @NotNull String categoryType,
+            @NotNull String liveCategory,
+            @NotNull String liveCategoryValue,
+            @NotNull String channelId,
+            @NotNull String channelName,
+            @NotNull String channelImageUrl
     ) {}
 
     public record Page(
