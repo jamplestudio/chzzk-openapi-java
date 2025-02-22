@@ -1,5 +1,8 @@
 package com.jamplestudio.coj.chzzk;
 
+import com.google.common.collect.Lists;
+import com.jamplestudio.coj.protocol.data.ChannelInformationRequest;
+import com.jamplestudio.coj.protocol.data.ChannelInformationResponse;
 import com.jamplestudio.coj.protocol.data.UserInformationRequest;
 import com.jamplestudio.coj.protocol.data.UserInformationResponse;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
@@ -63,6 +66,28 @@ public class ChzzkImpl implements Chzzk {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .map(ChzzkUser::of);
+        });
+    }
+
+    @Override
+    public @NotNull Optional<ChzzkChannel> getCurrentChannel() {
+        return getCurrentChannelAsync().join();
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Optional<ChzzkChannel>> getCurrentChannelAsync() {
+        return CompletableFuture.supplyAsync(() -> {
+            Optional<HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient>> executor =
+                    httpRequestExecutorFactory.create("channel_information");
+
+            ChannelInformationRequest requestInst = new ChannelInformationRequest(Lists.newArrayList(""), "");
+            return executor
+                    .map(it -> it.execute(httpClient, requestInst))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .filter(it -> !it.data().isEmpty())
+                    .map(it -> it.data().getFirst())
+                    .map(ChzzkChannel::of);
         });
     }
 

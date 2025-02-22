@@ -31,4 +31,8 @@ public interface Chzzk {
 
     @NotNull CompletableFuture<Optional<ChzzkUser>> getCurrentUserAsync();
 
+    @NotNull Optional<ChzzkChannel> getCurrentChannel();
+
+    @NotNull CompletableFuture<Optional<ChzzkChannel>> getCurrentChannelAsync();
+
 }
