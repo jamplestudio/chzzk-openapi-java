@@ -1,20 +1,25 @@
-package com.jamplestudio.coj.chzzk.v1;
+package com.jamplestudio.coj.chzzk.impl;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.jamplestudio.coj.chzzk.Chzzk;
 import com.jamplestudio.coj.chzzk.ChzzkBuilder;
+import com.jamplestudio.coj.chzzk.ChzzkEventHandler;
 import com.jamplestudio.coj.chzzk.ChzzkToken;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 public class ChzzkBuilderV1 implements ChzzkBuilder {
 
     private String clientId;
     private String clientSecret;
     private ChzzkToken token;
-    private HttpRequestExecutorFactory httpExecutorFactory;
-    private ChzzkHttpClient<OkHttpClient> httpClient;
+    private Set<ChzzkEventHandler> handlers = Sets.newHashSet();
     
     public ChzzkBuilderV1() {}
 
@@ -28,33 +33,23 @@ public class ChzzkBuilderV1 implements ChzzkBuilder {
         return this;
     }
 
-    public @NotNull ChzzkBuilder token(@NotNull ChzzkToken token) {
+    public @NotNull ChzzkBuilder token(@Nullable ChzzkToken token) {
         this.token = token;
         return this;
     }
 
-    public @NotNull ChzzkBuilder httpExecutorFactory(@NotNull HttpRequestExecutorFactory httpExecutorFactory) {
-        this.httpExecutorFactory = httpExecutorFactory;
+    @Override
+    public @NotNull ChzzkBuilder addEventHandler(@NotNull ChzzkEventHandler... handlers) {
+        this.handlers.addAll(Lists.newArrayList(handlers));
         return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public @NotNull ChzzkBuilder httpClient(@NotNull ChzzkHttpClient<?> httpClient) {
-        this.httpClient = (ChzzkHttpClient<OkHttpClient>) httpClient;
-        return this;
-    }
-    
     public @NotNull Chzzk build() {
-        if (clientId == null
-                || clientSecret == null
-                || token == null
-                || httpExecutorFactory == null
-                || httpClient == null
-        ) {
+        if (clientId == null || clientSecret == null) {
             throw new IllegalArgumentException("Missing required fields.");
         }
 
-        return new ChzzkV1(clientId, clientSecret, token, httpExecutorFactory, httpClient);
+        return new ChzzkV1(clientId, clientSecret, token, handlers);
     }
 
 }

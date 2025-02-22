@@ -1,44 +1,56 @@
-package com.jamplestudio.coj.chzzk.v1;
+package com.jamplestudio.coj.chzzk.impl;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.jamplestudio.coj.chzzk.*;
 import com.jamplestudio.coj.protocol.data.*;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
 import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
+import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactoryV1;
 import lombok.Getter;
 import lombok.Setter;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 
 @Getter
 @Setter
-public class ChzzkV1 implements Chzzk, ChzzkTokenMutator {
+public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolder {
 
     private final @NotNull String clientId;
     private final @NotNull String clientSecret;
+    private @Nullable ChzzkToken token;
+
+    private final @NotNull ImmutableSet<ChzzkEventHandler> handlers;
+
     private final @NotNull HttpRequestExecutorFactory httpRequestExecutorFactory;
     private final @NotNull ChzzkHttpClient<OkHttpClient> httpClient;
 
-    private ChzzkToken token;
-
     ChzzkV1(
-            @NotNull String clientId, @NotNull String clientSecret, @NotNull ChzzkToken token,
-            @NotNull HttpRequestExecutorFactory httpRequestExecutorFactory,
-            @NotNull ChzzkHttpClient<OkHttpClient> httpClient
+            @NotNull String clientId, @NotNull String clientSecret,
+            @Nullable ChzzkToken token, @NotNull Set<ChzzkEventHandler> handlers
     ) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.token = token;
-        this.httpRequestExecutorFactory = httpRequestExecutorFactory;
-        this.httpClient = httpClient;
+        this.handlers = ImmutableSet.copyOf(handlers);
+        this.httpRequestExecutorFactory = new HttpRequestExecutorFactoryV1();
+        this.httpClient = ChzzkHttpClient.okhttp();
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Void> refreshTokenAsync() {
+        return CompletableFuture.runAsync(this::refreshToken);
     }
 
     @Override
@@ -53,6 +65,14 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator {
                 .ifPresent(token -> {
                     this.token = new ChzzkToken(token.accessToken(), token.refreshToken());
                 });
+
+        // 토큰 재발급 이벤트 호출
+        handlers.forEach(handler -> handler.onRefreshToken(this));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Void> revokeTokenAsync() {
+        return CompletableFuture.runAsync(this::revokeToken);
     }
 
     @Override
@@ -67,6 +87,11 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator {
         AccessTokenRevokeRequest refreshTokenRevokeRequestInst = new AccessTokenRevokeRequest(
                 clientId, clientSecret, token.refreshToken(), AccessTokenRevokeRequest.TokenTypeHint.REFRESH_TOKEN);
         executor.map(it -> it.execute(httpClient, refreshTokenRevokeRequestInst));
+
+        token = null;
+
+        // 토큰 제거 이벤트 호출
+        handlers.forEach(handler -> handler.onRevokeToken(this));
     }
 
     @Override

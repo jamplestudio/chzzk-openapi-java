@@ -1,8 +1,7 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.chzzk.v1.ChzzkBuilderV1;
+import com.jamplestudio.coj.chzzk.impl.ChzzkBuilderV1;
 import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
-import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -23,9 +22,13 @@ public interface Chzzk {
 
     @NotNull HttpRequestExecutorFactory getHttpRequestExecutorFactory();
 
-    @NotNull ChzzkToken getToken();
+    @NotNull Optional<ChzzkToken> getToken();
+
+    @NotNull CompletableFuture<Void> refreshTokenAsync();
 
     void refreshToken();
+
+    @NotNull CompletableFuture<Void> revokeTokenAsync();
 
     void revokeToken();
 

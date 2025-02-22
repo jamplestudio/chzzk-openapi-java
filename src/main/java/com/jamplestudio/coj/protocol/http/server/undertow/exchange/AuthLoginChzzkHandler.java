@@ -1,7 +1,7 @@
-package com.jamplestudio.coj.protocol.http.server.exchange;
+package com.jamplestudio.coj.protocol.http.server.undertow.exchange;
 
-import com.jamplestudio.coj.chzzk.Chzzk;
-import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
+import com.jamplestudio.coj.chzzk.ChzzkAuthServer;
+import com.jamplestudio.coj.protocol.http.server.AuthServer;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.session.Session;
@@ -16,9 +16,9 @@ import java.util.UUID;
 
 public class AuthLoginChzzkHandler implements HttpHandler {
 
-    private final @NotNull ChzzkAuthServer server;
+    private final @NotNull AuthServer server;
 
-    public AuthLoginChzzkHandler(@NotNull ChzzkAuthServer chzzk) {
+    public AuthLoginChzzkHandler(@NotNull AuthServer chzzk) {
         this.server = chzzk;
     }
 
@@ -36,7 +36,7 @@ public class AuthLoginChzzkHandler implements HttpHandler {
         String state = UUID.randomUUID().toString().replace("-", "");
         session.setAttribute("OAUTH_STATE", state);
 
-        Chzzk chzzk = server.getChzzk();
+        ChzzkAuthServer chzzk = server.getChzzkAuthServer();
         HttpUrl url = HttpUrl.get("https://chzzk.naver.com/account-interlock")
                 .newBuilder()
                 .addQueryParameter("clientId", chzzk.getClientId())

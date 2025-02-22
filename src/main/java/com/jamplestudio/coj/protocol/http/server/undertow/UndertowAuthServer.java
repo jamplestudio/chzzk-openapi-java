@@ -1,8 +1,9 @@
-package com.jamplestudio.coj.protocol.http.server;
+package com.jamplestudio.coj.protocol.http.server.undertow;
 
-import com.jamplestudio.coj.chzzk.Chzzk;
-import com.jamplestudio.coj.protocol.http.server.exchange.AuthCallbackHandler;
-import com.jamplestudio.coj.protocol.http.server.exchange.AuthLoginChzzkHandler;
+import com.jamplestudio.coj.chzzk.ChzzkAuthServer;
+import com.jamplestudio.coj.protocol.http.server.AuthServer;
+import com.jamplestudio.coj.protocol.http.server.undertow.exchange.AuthCallbackHandler;
+import com.jamplestudio.coj.protocol.http.server.undertow.exchange.AuthLoginChzzkHandler;
 import io.undertow.Undertow;
 import io.undertow.server.RoutingHandler;
 import io.undertow.server.handlers.PathHandler;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 @Getter
-public class ChzzkAuthServerImpl implements ChzzkAuthServer {
+public class UndertowAuthServer implements AuthServer {
 
     private final UUID uniqueId = UUID.randomUUID();
 
@@ -27,10 +28,10 @@ public class ChzzkAuthServerImpl implements ChzzkAuthServer {
     private final RoutingHandler routing = new RoutingHandler();
     private final Undertow server;
 
-    private final @NotNull Chzzk chzzk;
+    private final @NotNull ChzzkAuthServer chzzkAuthServer;
 
-    public ChzzkAuthServerImpl(@NotNull Chzzk chzzk) {
-        this.chzzk = chzzk;
+    public UndertowAuthServer(@NotNull ChzzkAuthServer chzzkAuthServer) {
+        this.chzzkAuthServer = chzzkAuthServer;
 
         routing.get("/auth/login/chzzk", new AuthLoginChzzkHandler(this));
         routing.get("/auth/callback", new AuthCallbackHandler(this));
@@ -39,7 +40,7 @@ public class ChzzkAuthServerImpl implements ChzzkAuthServer {
         pathHandler.addPrefixPath("/", routing);
 
         server = Undertow.builder()
-                .addHttpListener(chzzk.getPort(), chzzk.getHost())
+                .addHttpListener(chzzkAuthServer.getPort(), chzzkAuthServer.getHost())
                 .setHandler(pathHandler)
                 .build();
     }

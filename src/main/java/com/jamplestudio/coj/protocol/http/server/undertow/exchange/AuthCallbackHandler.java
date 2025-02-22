@@ -1,19 +1,16 @@
-package com.jamplestudio.coj.protocol.http.server.exchange;
+package com.jamplestudio.coj.protocol.http.server.undertow.exchange;
 
-import com.jamplestudio.coj.chzzk.Chzzk;
-import com.jamplestudio.coj.chzzk.ChzzkTokenMutator;
-import com.jamplestudio.coj.chzzk.ChzzkToken;
+import com.jamplestudio.coj.chzzk.*;
 import com.jamplestudio.coj.protocol.data.AccessTokenGrantRequest;
 import com.jamplestudio.coj.protocol.data.AccessTokenGrantResponse;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
-import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
+import com.jamplestudio.coj.protocol.http.server.AuthServer;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.session.Session;
 import io.undertow.server.session.SessionCookieConfig;
 import io.undertow.server.session.SessionManager;
-import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
@@ -25,9 +22,9 @@ import java.util.Optional;
 
 public class AuthCallbackHandler implements HttpHandler {
 
-    private final @NotNull ChzzkAuthServer server;
+    private final @NotNull AuthServer server;
 
-    public AuthCallbackHandler(@NotNull ChzzkAuthServer server) {
+    public AuthCallbackHandler(@NotNull AuthServer server) {
         this.server = server;
     }
 
@@ -40,9 +37,6 @@ public class AuthCallbackHandler implements HttpHandler {
         if (session == null) {
             session = manager.createSession(exchange, cookieConfig);
         }
-
-        System.out.println("params: " + exchange.getQueryParameters().keySet());
-        System.out.println("query: " + exchange.getQueryString());
 
         String code = getQueryParam(exchange, "code");
         String state = getQueryParam(exchange, "state");
@@ -61,9 +55,16 @@ public class AuthCallbackHandler implements HttpHandler {
             return;
         }
 
-        // (백엔드) 치지직 토큰 발급 API 호출 -> accessToken 획득
+        // 치지직 인스턴스 생성 (토큰 바인딩 안된 상태)
+        ChzzkAuthServer chzzkServer = server.getChzzkAuthServer();
+        Chzzk chzzk = server.getChzzkAuthServer().newChzzkBuilder()
+                .clientId(chzzkServer.getClientId())
+                .clientSecret(chzzkServer.getClientSecret())
+                .build();
+
+        // 토큰 요청
         Optional<HttpRequestExecutor<AccessTokenGrantRequest, AccessTokenGrantResponse, OkHttpClient>> requester =
-                server.getChzzk().getHttpRequestExecutorFactory().create("access_token_grant");
+                chzzk.getHttpRequestExecutorFactory().create("access_token_grant");
 
         if (requester.isEmpty()) {
             exchange.setStatusCode(StatusCodes.BAD_REQUEST);
@@ -71,8 +72,7 @@ public class AuthCallbackHandler implements HttpHandler {
             return;
         }
 
-        Chzzk chzzk = server.getChzzk();
-        AccessTokenGrantRequest requestInst = new AccessTokenGrantRequest(chzzk.getClientId(), chzzk.getClientSecret(), code, state);
+        AccessTokenGrantRequest requestInst = new AccessTokenGrantRequest(chzzkServer.getClientId(), chzzkServer.getClientSecret(), code, state);
         Optional<AccessTokenGrantResponse> responseInst = requester.get().execute(ChzzkHttpClient.okhttp(), requestInst);
 
         if (responseInst.isEmpty()) {
@@ -81,21 +81,19 @@ public class AuthCallbackHandler implements HttpHandler {
             return;
         }
 
+        // 토큰 바인드
         ChzzkToken token = new ChzzkToken(responseInst.get().accessToken(), responseInst.get().refreshToken());
-
-        // 세션에 토큰 저장 (또는 DB/Redis 등)
-        session.setAttribute("CHZZK_ACCESS_TOKEN", token.accessToken());
-        session.setAttribute("CHZZK_REFRESH_TOKEN", token.refreshToken());
-
-        // 토큰 저장
         if (chzzk instanceof ChzzkTokenMutator mutator) {
             mutator.setToken(token);
+
+            // 치지직 토큰 발급 이벤트 호출
+            if (chzzk instanceof ChzzkEventHandlerHolder holder) {
+                holder.getHandlers().forEach(handler -> handler.onGrantToken(chzzk));
+            }
         }
 
         // 로그인 성공 안내
         exchange.setStatusCode(StatusCodes.OK);
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain; charset=utf-8");
-        exchange.getResponseSender().send("AccessToken = " + token);
     }
 
     private @Nullable String getQueryParam(HttpServerExchange exchange, String key) {
