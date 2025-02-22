@@ -3,6 +3,7 @@ package com.jamplestudio.coj.chzzk;
 import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.Collection;
 import java.util.List;
@@ -50,5 +51,9 @@ public interface Chzzk {
     @NotNull CompletableFuture<List<ChzzkChannel>> getChannelsAsync(@NotNull Collection<String> channelIds);
 
     @NotNull List<ChzzkChannel> getChannels(@NotNull Collection<String> channelIds);
+
+    @NotNull CompletableFuture<List<ChzzkCategorySearchResult>> searchCategoriesAsync(@NotNull String categoryName, @Range(from = 1, to = 50) int amount);
+
+    @NotNull List<ChzzkCategorySearchResult> searchCategories(@NotNull String categoryName, @Range(from = 1, to = 50) int amount);
 
 }

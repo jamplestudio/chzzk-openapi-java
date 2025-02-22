@@ -150,4 +150,29 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
                 .toList();
     }
 
+    @Override
+    public @NotNull CompletableFuture<List<ChzzkCategorySearchResult>> searchCategoriesAsync(
+            @NotNull String categoryName, @Range(from = 1, to = 50) int amount) {
+        return CompletableFuture.supplyAsync(() -> searchCategories(categoryName, amount));
+    }
+
+    @Override
+    public @NotNull List<ChzzkCategorySearchResult> searchCategories(
+            @NotNull String categoryName, @Range(from = 1, to = 50) int amount) {
+
+        Optional<HttpRequestExecutor<CategorySearchRequest, CategorySearchResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("channel_information");
+
+        CategorySearchRequest requestInst = new CategorySearchRequest(amount, categoryName, token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(CategorySearchResponse::data)
+                .orElse(Lists.newArrayList())
+                .stream()
+                .map(ChzzkCategorySearchResult::of)
+                .toList();
+    }
+
 }
