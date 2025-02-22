@@ -4,6 +4,9 @@ import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
 public interface Chzzk {
 
     static @NotNull ChzzkBuilder builder() {
@@ -23,5 +26,9 @@ public interface Chzzk {
     @NotNull ChzzkAuthServer getServer();
 
     @NotNull HttpRequestExecutorFactory getHttpRequestExecutorFactory();
+
+    @NotNull Optional<ChzzkUser> getCurrentUser();
+
+    @NotNull CompletableFuture<Optional<ChzzkUser>> getCurrentUserAsync();
 
 }
