@@ -92,4 +92,8 @@ public interface Chzzk {
 
     @NotNull Optional<ChzzkLiveStreamKey> getLiveStreamKey();
 
+    @NotNull CompletableFuture<Optional<ChzzkSessionUrl>> getSessionUrlAsync();
+
+    @NotNull Optional<ChzzkSessionUrl> getSessionUrl();
+
 }

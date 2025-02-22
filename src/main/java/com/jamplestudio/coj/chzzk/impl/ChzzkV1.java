@@ -427,4 +427,26 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
                 .map(ChzzkLiveStreamKey::of);
     }
 
+    @Override
+    public @NotNull CompletableFuture<Optional<ChzzkSessionUrl>> getSessionUrlAsync() {
+        return CompletableFuture.supplyAsync(this::getSessionUrl);
+    }
+
+    @Override
+    public @NotNull Optional<ChzzkSessionUrl> getSessionUrl() {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
+        Optional<HttpRequestExecutor<SessionUrlRequest, SessionUrlResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("session_url");
+
+        SessionUrlRequest requestInst = new SessionUrlRequest(token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(it -> new ChzzkSessionUrl(it.url()));
+    }
+
 }

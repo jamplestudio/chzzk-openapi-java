@@ -31,6 +31,7 @@ public class HttpRequestExecutorFactoryV1 implements HttpRequestExecutorFactory 
         types.put("live_settings", LiveSettingsExecutor.class);
         types.put("live_stream_key", LiveStreamKeyExecutor.class);
         types.put("user_information", UserInformationExecutor.class);
+        types.put("session_url", SessionUrlExecutor.class);
     }
 
     @Override
