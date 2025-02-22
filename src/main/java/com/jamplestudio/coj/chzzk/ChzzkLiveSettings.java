@@ -1,7 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.google.common.collect.ImmutableList;
-import com.jamplestudio.coj.protocol.data.LiveSettingsResponse;
+import com.jamplestudio.coj.net.data.LiveSettingsResponse;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

@@ -2,13 +2,12 @@ package com.jamplestudio.coj.chzzk.impl;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.jamplestudio.coj.chzzk.*;
-import com.jamplestudio.coj.protocol.data.*;
-import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
-import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
-import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
-import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactoryV1;
+import com.jamplestudio.coj.net.data.*;
+import com.jamplestudio.coj.net.http.client.ChzzkHttpClient;
+import com.jamplestudio.coj.net.http.executor.HttpRequestExecutor;
+import com.jamplestudio.coj.net.http.factory.HttpRequestExecutorFactory;
+import com.jamplestudio.coj.net.http.factory.HttpRequestExecutorFactoryV1;
 import lombok.Getter;
 import lombok.Setter;
 import okhttp3.OkHttpClient;

@@ -1,6 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.protocol.data.ChannelInformationResponse;
+import com.jamplestudio.coj.net.data.ChannelInformationResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 

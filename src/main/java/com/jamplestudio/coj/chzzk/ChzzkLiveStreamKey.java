@@ -1,6 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.protocol.data.LiveStreamKeyResponse;
+import com.jamplestudio.coj.net.data.LiveStreamKeyResponse;
 import org.jetbrains.annotations.NotNull;
 
 public interface ChzzkLiveStreamKey {

@@ -1,6 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.protocol.data.UserInformationResponse;
+import com.jamplestudio.coj.net.data.UserInformationResponse;
 import org.jetbrains.annotations.NotNull;
 
 public interface ChzzkUser {

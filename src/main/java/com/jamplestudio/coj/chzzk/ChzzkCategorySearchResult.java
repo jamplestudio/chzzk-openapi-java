@@ -1,6 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.protocol.data.CategorySearchResponse;
+import com.jamplestudio.coj.net.data.CategorySearchResponse;
 import org.jetbrains.annotations.NotNull;
 
 public interface ChzzkCategorySearchResult {

@@ -1,6 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.protocol.data.LiveSearchResponse;
+import com.jamplestudio.coj.net.data.LiveSearchResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 

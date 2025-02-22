@@ -1,6 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.protocol.data.ChatSettingsResponse;
+import com.jamplestudio.coj.net.data.ChatSettingsResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 

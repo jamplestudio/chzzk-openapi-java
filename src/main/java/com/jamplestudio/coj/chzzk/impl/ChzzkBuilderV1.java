@@ -6,9 +6,6 @@ import com.jamplestudio.coj.chzzk.Chzzk;
 import com.jamplestudio.coj.chzzk.ChzzkBuilder;
 import com.jamplestudio.coj.chzzk.ChzzkEventHandler;
 import com.jamplestudio.coj.chzzk.ChzzkToken;
-import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
-import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
-import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

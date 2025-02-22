@@ -2,8 +2,8 @@ package com.jamplestudio.coj.chzzk.impl;
 
 import com.jamplestudio.coj.chzzk.ChzzkAuthServer;
 import com.jamplestudio.coj.chzzk.ChzzkBuilder;
-import com.jamplestudio.coj.protocol.http.server.AuthServer;
-import com.jamplestudio.coj.protocol.http.server.undertow.UndertowAuthServer;
+import com.jamplestudio.coj.net.http.server.AuthServer;
+import com.jamplestudio.coj.net.http.server.undertow.UndertowAuthServer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
