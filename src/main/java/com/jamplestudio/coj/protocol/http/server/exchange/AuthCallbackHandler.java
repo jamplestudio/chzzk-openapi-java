@@ -2,7 +2,7 @@ package com.jamplestudio.coj.protocol.http.server.exchange;
 
 import com.jamplestudio.coj.chzzk.Chzzk;
 import com.jamplestudio.coj.chzzk.ChzzkTokenMutator;
-import com.jamplestudio.coj.chzzk.data.ChzzkToken;
+import com.jamplestudio.coj.chzzk.ChzzkToken;
 import com.jamplestudio.coj.protocol.data.AccessTokenGrantRequest;
 import com.jamplestudio.coj.protocol.data.AccessTokenGrantResponse;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;

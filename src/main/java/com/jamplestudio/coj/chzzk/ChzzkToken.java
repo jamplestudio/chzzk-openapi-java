@@ -1,4 +1,4 @@
-package com.jamplestudio.coj.chzzk.data;
+package com.jamplestudio.coj.chzzk;
 
 import org.jetbrains.annotations.NotNull;
 

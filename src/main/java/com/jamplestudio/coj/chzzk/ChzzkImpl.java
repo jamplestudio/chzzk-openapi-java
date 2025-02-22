@@ -1,7 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
 import com.google.common.collect.Lists;
-import com.jamplestudio.coj.chzzk.data.ChzzkToken;
 import com.jamplestudio.coj.protocol.data.*;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;

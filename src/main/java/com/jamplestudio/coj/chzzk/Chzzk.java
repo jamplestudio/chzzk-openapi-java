@@ -1,6 +1,5 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.chzzk.data.ChzzkToken;
 import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
 import org.jetbrains.annotations.NotNull;
