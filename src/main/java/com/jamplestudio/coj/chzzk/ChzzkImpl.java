@@ -1,6 +1,7 @@
 package com.jamplestudio.coj.chzzk;
 
 import com.google.common.collect.Lists;
+import com.jamplestudio.coj.chzzk.data.ChzzkToken;
 import com.jamplestudio.coj.protocol.data.ChannelInformationRequest;
 import com.jamplestudio.coj.protocol.data.ChannelInformationResponse;
 import com.jamplestudio.coj.protocol.data.UserInformationRequest;
@@ -12,6 +13,7 @@ import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactoryV1;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServerImpl;
 import lombok.Getter;
+import lombok.Setter;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -23,7 +25,8 @@ import java.util.concurrent.CompletableFuture;
 
 
 @Getter
-public class ChzzkImpl implements Chzzk {
+@Setter
+public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
 
     private final @NotNull String clientId;
     private final @NotNull String clientSecret;
@@ -35,6 +38,8 @@ public class ChzzkImpl implements Chzzk {
     private final @NotNull HttpRequestExecutorFactory httpRequestExecutorFactory;
 
     private final @NotNull ChzzkHttpClient<OkHttpClient> httpClient = ChzzkHttpClient.okhttp();
+
+    private ChzzkToken token;
 
     ChzzkImpl(
             @NotNull String clientId, @NotNull String clientSecret,

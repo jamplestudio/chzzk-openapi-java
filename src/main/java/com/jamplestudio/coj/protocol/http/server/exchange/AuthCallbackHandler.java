@@ -1,6 +1,7 @@
 package com.jamplestudio.coj.protocol.http.server.exchange;
 
 import com.jamplestudio.coj.chzzk.Chzzk;
+import com.jamplestudio.coj.chzzk.ChzzkTokenMutator;
 import com.jamplestudio.coj.chzzk.data.ChzzkToken;
 import com.jamplestudio.coj.protocol.data.AccessTokenGrantRequest;
 import com.jamplestudio.coj.protocol.data.AccessTokenGrantResponse;
@@ -80,16 +81,21 @@ public class AuthCallbackHandler implements HttpHandler {
             return;
         }
 
-        ChzzkToken accessToken = new ChzzkToken(responseInst.get().accessToken(), responseInst.get().refreshToken());
+        ChzzkToken token = new ChzzkToken(responseInst.get().accessToken(), responseInst.get().refreshToken());
 
         // 세션에 토큰 저장 (또는 DB/Redis 등)
-        session.setAttribute("CHZZK_ACCESS_TOKEN", accessToken.accessToken());
-        session.setAttribute("CHZZK_REFRESH_TOKEN", accessToken.refreshToken());
+        session.setAttribute("CHZZK_ACCESS_TOKEN", token.accessToken());
+        session.setAttribute("CHZZK_REFRESH_TOKEN", token.refreshToken());
+
+        // 토큰 저장
+        if (chzzk instanceof ChzzkTokenMutator mutator) {
+            mutator.setToken(token);
+        }
 
         // 로그인 성공 안내
         exchange.setStatusCode(StatusCodes.OK);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain; charset=utf-8");
-        exchange.getResponseSender().send("AccessToken = " + accessToken);
+        exchange.getResponseSender().send("AccessToken = " + token);
     }
 
     private @Nullable String getQueryParam(HttpServerExchange exchange, String key) {
