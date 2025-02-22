@@ -1,10 +1,14 @@
 package com.jamplestudio.coj.protocol.http.executor.okhttp;
 
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.jamplestudio.coj.protocol.data.AccessTokenRefreshRequest;
 import com.jamplestudio.coj.protocol.data.AccessTokenRefreshResponse;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
+import com.jamplestudio.coj.utils.Constants;
+import com.jamplestudio.coj.utils.HttpResponseParser;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,34 +17,28 @@ import java.util.Optional;
 
 public class AccessTokenRefreshExecutor implements HttpRequestExecutor<AccessTokenRefreshRequest, AccessTokenRefreshResponse, OkHttpClient> {
 
-    private static final @NotNull String URL = "https://openapi.chzzk.naver.com/auth/v1/token";
-    private static final @NotNull Gson GSON = new Gson();
-
     @Override
     public @NotNull Optional<AccessTokenRefreshResponse> execute(
             @NotNull ChzzkHttpClient<OkHttpClient> client, @NotNull AccessTokenRefreshRequest requestInst) {
-        RequestBody formBody = new FormBody.Builder()
-                .add("grantType", requestInst.grantType())
-                .add("refreshToken", requestInst.refreshToken())
-                .add("clientId", requestInst.clientId())
-                .add("clientSecret", requestInst.clientSecret())
-                .build();
+
+        JsonObject requestJson = new JsonObject();
+        requestJson.addProperty("grantType", requestInst.grantType());
+        requestJson.addProperty("refreshToken", requestInst.refreshToken());
+        requestJson.addProperty("clientId", requestInst.clientId());
+        requestJson.addProperty("clientSecret", requestInst.clientSecret());
+
+        RequestBody body = RequestBody.create(requestJson.toString(), Constants.MEDIA_TYPE_JSON);
 
         Request request = new Request.Builder()
-                .url(URL)
-                .post(formBody)
+                .url(Constants.OPENAPI_URL + "/auth/v1/token")
+                .post(body)
                 .build();
 
         try (Response response = client.getNativeHttpClient().newCall(request).execute()) {
-            if (response.isSuccessful() && response.body() != null) {
-                AccessTokenRefreshResponse responseInst = GSON.fromJson(response.body().string(), AccessTokenRefreshResponse.class);
-                return Optional.of(responseInst);
-            }
+            return HttpResponseParser.parse(response, new TypeToken<>() {});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return Optional.empty();
     }
 
 }

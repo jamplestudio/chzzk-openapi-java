@@ -1,9 +1,10 @@
 package com.jamplestudio.coj.protocol.http.executor.okhttp;
 
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.jamplestudio.coj.protocol.data.AccessTokenRevokeRequest;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
+import com.jamplestudio.coj.utils.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,21 +13,19 @@ import java.util.Optional;
 
 public class AccessTokenRevokeExecutor implements HttpRequestExecutor<AccessTokenRevokeRequest, Void, OkHttpClient> {
 
-    private static final @NotNull String URL = "https://openapi.chzzk.naver.com/auth/v1/token/revoke";
-    private static final @NotNull Gson GSON = new Gson();
-
     @Override
     public @NotNull Optional<Void> execute(@NotNull ChzzkHttpClient<OkHttpClient> client, @NotNull AccessTokenRevokeRequest requestInst) {
-        RequestBody formBody = new FormBody.Builder()
-                .add("clientId", requestInst.clientId())
-                .add("clientSecret", requestInst.clientSecret())
-                .add("token", requestInst.token())
-                .add("tokenTypeHint", requestInst.tokenTypeHint().getAsString())
-                .build();
+        JsonObject requestJson = new JsonObject();
+        requestJson.addProperty("clientId", requestInst.clientId());
+        requestJson.addProperty("clientSecret", requestInst.clientSecret());
+        requestJson.addProperty("token", requestInst.token());
+        requestJson.addProperty("tokenTypeHint", requestInst.tokenTypeHint().getAsString());
+
+        RequestBody body = RequestBody.create(requestJson.toString(), Constants.MEDIA_TYPE_JSON);
 
         Request request = new Request.Builder()
-                .url(URL)
-                .post(formBody)
+                .url(Constants.OPENAPI_URL + "/auth/v1/token/revoke")
+                .post(body)
                 .build();
 
         try (Response ignored = client.getNativeHttpClient().newCall(request).execute()) {

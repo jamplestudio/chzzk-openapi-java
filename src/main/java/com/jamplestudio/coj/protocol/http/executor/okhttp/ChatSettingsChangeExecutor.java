@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.jamplestudio.coj.protocol.data.ChatSettingsChangeRequest;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
+import com.jamplestudio.coj.utils.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,9 +12,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class ChatSettingsChangeExecutor implements HttpRequestExecutor<ChatSettingsChangeRequest, Void, OkHttpClient> {
-
-    private static final @NotNull String URL = "https://openapi.chzzk.naver.com/open/v1/chats/settings";
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     @Override
     public @NotNull Optional<Void> execute(@NotNull ChzzkHttpClient<OkHttpClient> client, @NotNull ChatSettingsChangeRequest requestInst) {
@@ -23,10 +21,10 @@ public class ChatSettingsChangeExecutor implements HttpRequestExecutor<ChatSetti
         json.addProperty("minFollowerMinute", requestInst.minFollowerMinute());
         json.addProperty("allowSubscriberInFollowerMode", requestInst.allowSubscriberInFollowerMode());
 
-        RequestBody body = RequestBody.create(json.toString(), JSON);
+        RequestBody body = RequestBody.create(json.toString(), Constants.MEDIA_TYPE_JSON);
 
         Request request = new Request.Builder()
-                .url(URL)
+                .url(Constants.OPENAPI_URL + "/open/v1/chats/settings")
                 .put(body)
                 .addHeader("Authorization", "Bearer " + requestInst.accessToken())
                 .addHeader("Content-Type", "application/json")

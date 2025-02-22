@@ -1,10 +1,13 @@
 package com.jamplestudio.coj.protocol.http.executor.okhttp;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jamplestudio.coj.protocol.data.ChannelInformationRequest;
 import com.jamplestudio.coj.protocol.data.ChannelInformationResponse;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
+import com.jamplestudio.coj.utils.Constants;
+import com.jamplestudio.coj.utils.HttpResponseParser;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -16,14 +19,11 @@ import java.util.Optional;
 
 public class ChannelInformationExecutor implements HttpRequestExecutor<ChannelInformationRequest, ChannelInformationResponse, OkHttpClient> {
 
-    private static final @NotNull String URL = "https://openapi.chzzk.naver.com/open/v1/channels";
-    private static final @NotNull Gson GSON = new Gson();
-
     @Override
     public @NotNull Optional<ChannelInformationResponse> execute(
             @NotNull ChzzkHttpClient<OkHttpClient> client, @NotNull ChannelInformationRequest requestInst) {
 
-        HttpUrl.Builder builder = HttpUrl.get(URL).newBuilder();
+        HttpUrl.Builder builder = HttpUrl.get(Constants.OPENAPI_URL + "/open/v1/channels").newBuilder();
         requestInst.channelIds().forEach(id -> builder.addQueryParameter("channelIds", id));
 
         HttpUrl url = builder.build();
@@ -36,15 +36,10 @@ public class ChannelInformationExecutor implements HttpRequestExecutor<ChannelIn
                 .build();
 
         try (Response response = client.getNativeHttpClient().newCall(request).execute()) {
-            if (response.isSuccessful() && response.body() != null) {
-                ChannelInformationResponse responseInst = GSON.fromJson(response.body().string(), ChannelInformationResponse.class);
-                return Optional.of(responseInst);
-            }
+            return HttpResponseParser.parse(response, new TypeToken<>(){});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return Optional.empty();
     }
 
 }

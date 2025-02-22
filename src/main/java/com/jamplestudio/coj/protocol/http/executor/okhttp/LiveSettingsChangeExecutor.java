@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.jamplestudio.coj.protocol.data.LiveSettingsChangeRequest;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
+import com.jamplestudio.coj.utils.Constants;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,9 +13,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class LiveSettingsChangeExecutor implements HttpRequestExecutor<LiveSettingsChangeRequest, Void, OkHttpClient> {
-
-    private static final @NotNull String URL = "https://openapi.chzzk.naver.com/open/v1/lives/setting";
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     @Override
     public @NotNull Optional<Void> execute(@NotNull ChzzkHttpClient<OkHttpClient> client, @NotNull LiveSettingsChangeRequest requestInst) {
@@ -28,10 +26,10 @@ public class LiveSettingsChangeExecutor implements HttpRequestExecutor<LiveSetti
         requestInst.tags().forEach(arr::add);
         json.add("tags", arr);
 
-        RequestBody body = RequestBody.create(json.toString(), JSON);
+        RequestBody body = RequestBody.create(json.toString(), Constants.MEDIA_TYPE_JSON);
 
         Request request = new Request.Builder()
-                .url(URL)
+                .url(Constants.OPENAPI_URL + "/open/v1/lives/setting")
                 .patch(body)
                 .addHeader("Authorization", "Bearer " + requestInst.accessToken())
                 .addHeader("Content-Type", "application/json")

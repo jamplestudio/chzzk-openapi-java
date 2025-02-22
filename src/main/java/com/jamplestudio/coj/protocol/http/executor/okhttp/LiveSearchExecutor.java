@@ -1,10 +1,13 @@
 package com.jamplestudio.coj.protocol.http.executor.okhttp;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jamplestudio.coj.protocol.data.LiveSearchRequest;
 import com.jamplestudio.coj.protocol.data.LiveSearchResponse;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
+import com.jamplestudio.coj.utils.Constants;
+import com.jamplestudio.coj.utils.HttpResponseParser;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -16,14 +19,11 @@ import java.util.Optional;
 
 public class LiveSearchExecutor implements HttpRequestExecutor<LiveSearchRequest, LiveSearchResponse, OkHttpClient> {
 
-    private static final @NotNull String URL = "https://openapi.chzzk.naver.com/open/v1/lives";
-    private static final @NotNull Gson GSON = new Gson();
-
     @Override
     public @NotNull Optional<LiveSearchResponse> execute(
             @NotNull ChzzkHttpClient<OkHttpClient> client, @NotNull LiveSearchRequest requestInst) {
 
-        HttpUrl.Builder builder = HttpUrl.get(URL).newBuilder();
+        HttpUrl.Builder builder = HttpUrl.get(Constants.OPENAPI_URL + "/open/v1/lives").newBuilder();
         builder.addQueryParameter("size", Integer.toString(requestInst.size()));
         builder.addQueryParameter("next", requestInst.next());
 
@@ -37,15 +37,10 @@ public class LiveSearchExecutor implements HttpRequestExecutor<LiveSearchRequest
                 .build();
 
         try (Response response = client.getNativeHttpClient().newCall(request).execute()) {
-            if (response.isSuccessful() && response.body() != null) {
-                LiveSearchResponse responseInst = GSON.fromJson(response.body().string(), LiveSearchResponse.class);
-                return Optional.of(responseInst);
-            }
+            return HttpResponseParser.parse(response, new TypeToken<>(){});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return Optional.empty();
     }
 
 }
