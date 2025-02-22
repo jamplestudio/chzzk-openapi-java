@@ -15,7 +15,7 @@ public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
     private String clientId;
     private String clientSecret;
     private String redirectUri;
-    private String host;
+    private String host = "0.0.0.0";
     private int port = 80;
 
     private final Set<ChzzkEventHandler> handlers = Sets.newHashSet();
