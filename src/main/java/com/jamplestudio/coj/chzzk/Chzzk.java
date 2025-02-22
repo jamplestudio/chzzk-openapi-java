@@ -1,5 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
+import com.jamplestudio.coj.chzzk.v1.ChzzkBuilderV1;
 import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
 import com.jamplestudio.coj.protocol.http.server.ChzzkAuthServer;
 import org.jetbrains.annotations.NotNull;
@@ -12,21 +13,13 @@ import java.util.concurrent.CompletableFuture;
 
 public interface Chzzk {
 
-    static @NotNull ChzzkBuilder builder() {
-        return new ChzzkBuilder();
+    static @NotNull ChzzkBuilder v1() {
+        return new ChzzkBuilderV1();
     }
 
     @NotNull String getClientId();
 
     @NotNull String getClientSecret();
-
-    @NotNull String getRedirectUri();
-
-    @NotNull String getHost();
-
-    int getPort();
-
-    @NotNull ChzzkAuthServer getServer();
 
     @NotNull HttpRequestExecutorFactory getHttpRequestExecutorFactory();
 
