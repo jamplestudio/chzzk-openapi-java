@@ -2,10 +2,7 @@ package com.jamplestudio.coj.chzzk;
 
 import com.google.common.collect.Lists;
 import com.jamplestudio.coj.chzzk.data.ChzzkToken;
-import com.jamplestudio.coj.protocol.data.ChannelInformationRequest;
-import com.jamplestudio.coj.protocol.data.ChannelInformationResponse;
-import com.jamplestudio.coj.protocol.data.UserInformationRequest;
-import com.jamplestudio.coj.protocol.data.UserInformationResponse;
+import com.jamplestudio.coj.protocol.data.*;
 import com.jamplestudio.coj.protocol.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.protocol.http.executor.HttpRequestExecutor;
 import com.jamplestudio.coj.protocol.http.factory.HttpRequestExecutorFactory;
@@ -54,6 +51,34 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
 
         this.server = new ChzzkAuthServerImpl(this);
         this.httpRequestExecutorFactory = new HttpRequestExecutorFactoryV1();
+    }
+
+    @Override
+    public void refreshToken() {
+        Optional<HttpRequestExecutor<AccessTokenRefreshRequest, AccessTokenRefreshResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("access_token_refresh");
+
+        AccessTokenRefreshRequest requestInst = new AccessTokenRefreshRequest(token.refreshToken(), clientId, clientSecret);
+        executor.map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .ifPresent(token -> {
+                    this.token = new ChzzkToken(token.accessToken(), token.refreshToken());
+                });
+    }
+
+    @Override
+    public void revokeToken() {
+        Optional<HttpRequestExecutor<AccessTokenRevokeRequest, Void, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("access_token_revoke");
+
+        AccessTokenRevokeRequest accessTokenRevokeRequestInst = new AccessTokenRevokeRequest(
+                clientId, clientSecret, token.accessToken(), AccessTokenRevokeRequest.TokenTypeHint.ACCESS_TOKEN);
+        executor.map(it -> it.execute(httpClient, accessTokenRevokeRequestInst));
+
+        AccessTokenRevokeRequest refreshTokenRevokeRequestInst = new AccessTokenRevokeRequest(
+                clientId, clientSecret, token.refreshToken(), AccessTokenRevokeRequest.TokenTypeHint.REFRESH_TOKEN);
+        executor.map(it -> it.execute(httpClient, refreshTokenRevokeRequestInst));
     }
 
     @Override

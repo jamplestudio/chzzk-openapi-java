@@ -32,6 +32,10 @@ public interface Chzzk {
 
     @NotNull ChzzkToken getToken();
 
+    void refreshToken();
+
+    void revokeToken();
+
     @NotNull CompletableFuture<Optional<ChzzkUser>> getCurrentUserAsync();
 
     @NotNull Optional<ChzzkUser> getCurrentUser();
