@@ -68,4 +68,12 @@ public interface Chzzk {
 
     @NotNull Optional<ChzzkChatMessageSendResult> sendChatMessage(@NotNull String message);
 
+    @NotNull CompletableFuture<Optional<ChzzkChatSettings>> getChatSettingsAsync();
+
+    @NotNull Optional<ChzzkChatSettings> getChatSettings();
+
+    void setChatSettingsAsync(@NotNull ChzzkChatSettings settings);
+
+    void setChatSettings(@NotNull ChzzkChatSettings settings);
+
 }

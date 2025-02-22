@@ -2,15 +2,15 @@ package com.jamplestudio.coj.chzzk;
 
 import org.jetbrains.annotations.NotNull;
 
-public enum ChzzkCategoryType {
+public enum ChzzkChatAvailableCondition {
 
-    GAME, SPORTS, ETC;
+    NONE, REAL_NAME;
 
-    public static @NotNull ChzzkCategoryType fromString(@NotNull String str) {
+    public static @NotNull ChzzkChatAvailableCondition fromString(@NotNull String str) {
         try {
             return valueOf(str.toUpperCase());
         } catch (Exception e) {
-            return ETC;
+            return NONE;
         }
     }
 

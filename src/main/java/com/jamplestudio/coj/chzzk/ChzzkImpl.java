@@ -221,4 +221,42 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
                 .map(it -> ChzzkChatMessageSendResult.of(it.messageId(), message));
     }
 
+    @Override
+    public @NotNull CompletableFuture<Optional<ChzzkChatSettings>> getChatSettingsAsync() {
+        return CompletableFuture.supplyAsync(this::getChatSettings);
+    }
+
+    @Override
+    public @NotNull Optional<ChzzkChatSettings> getChatSettings() {
+        Optional<HttpRequestExecutor<ChatSettingsRequest, ChatSettingsResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("chat_settings");
+
+        ChatSettingsRequest requestInst = new ChatSettingsRequest(token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ChzzkChatSettings::of);
+    }
+
+    @Override
+    public void setChatSettingsAsync(@NotNull ChzzkChatSettings settings) {
+        CompletableFuture.runAsync(() -> setChatSettings(settings));
+    }
+
+    @Override
+    public void setChatSettings(@NotNull ChzzkChatSettings settings) {
+        Optional<HttpRequestExecutor<ChatSettingsChangeRequest, Void, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("chat_settings_change");
+
+        ChatSettingsChangeRequest requestInst = new ChatSettingsChangeRequest(
+                settings.getChatAvailableCondition().toString(),
+                settings.getChatAvailableGroup().toString(),
+                settings.getMinimumFollowerTimeInMinutes(),
+                settings.isSubscriberAllowedInFollowerMode(),
+                token.accessToken()
+        );
+        executor.map(it -> it.execute(httpClient, requestInst));
+    }
+
 }
