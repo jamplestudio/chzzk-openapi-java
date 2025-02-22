@@ -52,6 +52,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
         }
     }
 
+    public @NotNull Optional<ChzzkToken> getToken() {
+        return Optional.ofNullable(token);
+    }
+
     @Override
     public @NotNull CompletableFuture<Void> refreshTokenAsync() {
         return CompletableFuture.runAsync(this::refreshToken);

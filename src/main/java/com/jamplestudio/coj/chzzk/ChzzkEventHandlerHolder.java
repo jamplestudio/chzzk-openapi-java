@@ -1,11 +1,10 @@
 package com.jamplestudio.coj.chzzk;
 
+import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public interface ChzzkEventHandlerHolder {
 
-    @NotNull List<ChzzkEventHandler> getHandlers();
+    @NotNull ImmutableSet<ChzzkEventHandler> getHandlers();
 
 }
