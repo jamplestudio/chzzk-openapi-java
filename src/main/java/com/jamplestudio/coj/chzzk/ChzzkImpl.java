@@ -175,4 +175,32 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
                 .toList();
     }
 
+    @Override
+    public void setChatAnnouncementByMessageAsync(@NotNull String message) {
+        CompletableFuture.runAsync(() -> setChatAnnouncementByMessage(message));
+    }
+
+    @Override
+    public void setChatAnnouncementByMessage(@NotNull String message) {
+        Optional<HttpRequestExecutor<ChatAnnouncementSetRequest, Void, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("channel_information");
+
+        ChatAnnouncementSetRequest requestInst = new ChatAnnouncementSetRequest(message, "", token.accessToken());
+        executor.map(it -> it.execute(httpClient, requestInst));
+    }
+
+    @Override
+    public void setChatAnnouncementByIdAsync(@NotNull String messageId) {
+        CompletableFuture.runAsync(() -> setChatAnnouncementById(messageId));
+    }
+
+    @Override
+    public void setChatAnnouncementById(@NotNull String messageId) {
+        Optional<HttpRequestExecutor<ChatAnnouncementSetRequest, Void, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("channel_information");
+
+        ChatAnnouncementSetRequest requestInst = new ChatAnnouncementSetRequest("", messageId, token.accessToken());
+        executor.map(it -> it.execute(httpClient, requestInst));
+    }
+
 }

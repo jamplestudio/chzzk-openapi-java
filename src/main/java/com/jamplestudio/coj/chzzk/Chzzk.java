@@ -56,4 +56,12 @@ public interface Chzzk {
 
     @NotNull List<ChzzkCategorySearchResult> searchCategories(@NotNull String categoryName, @Range(from = 1, to = 50) int amount);
 
+    void setChatAnnouncementByMessageAsync(@NotNull String message);
+
+    void setChatAnnouncementByMessage(@NotNull String message);
+
+    void setChatAnnouncementByIdAsync(@NotNull String messageId);
+
+    void setChatAnnouncementById(@NotNull String messageId);
+
 }
