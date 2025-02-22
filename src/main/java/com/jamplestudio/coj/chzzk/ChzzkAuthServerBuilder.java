@@ -10,7 +10,7 @@ public interface ChzzkAuthServerBuilder {
 
     @NotNull ChzzkAuthServerBuilder clientSecret(@NotNull String clientSecret);
 
-    @NotNull ChzzkAuthServerBuilder redirectUri(@NotNull String redirectUri);
+    @NotNull ChzzkAuthServerBuilder baseUri(@NotNull String baseUri);
 
     @NotNull ChzzkAuthServerBuilder host(@NotNull String host);
 

@@ -14,7 +14,7 @@ public interface ChzzkAuthServer {
 
     @NotNull String getClientSecret();
 
-    @NotNull String getRedirectUri();
+    @NotNull String getBaseUri();
 
     @NotNull String getHost();
 

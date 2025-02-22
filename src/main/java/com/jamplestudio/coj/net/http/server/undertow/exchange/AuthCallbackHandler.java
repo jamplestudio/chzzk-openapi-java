@@ -61,7 +61,7 @@ public class AuthCallbackHandler implements HttpHandler {
                 .clientId(chzzkServer.getClientId())
                 .clientSecret(chzzkServer.getClientSecret());
 
-        if (chzzkBuilder instanceof ChzzkEventHandlerHolder holder) {
+        if (chzzkServer instanceof ChzzkEventHandlerHolder holder) {
             chzzkBuilder.addEventHandler(holder.getHandlers());
         }
 

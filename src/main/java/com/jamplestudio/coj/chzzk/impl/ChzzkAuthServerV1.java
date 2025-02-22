@@ -18,7 +18,7 @@ public class ChzzkAuthServerV1 implements ChzzkAuthServer, ChzzkEventHandlerHold
 
     private final @NotNull String clientId;
     private final @NotNull String clientSecret;
-    private final @NotNull String redirectUri;
+    private final @NotNull String baseUri;
     private final @NotNull String host;
     private final @Range(from = 0, to = 65535) int port;
 
@@ -26,13 +26,13 @@ public class ChzzkAuthServerV1 implements ChzzkAuthServer, ChzzkEventHandlerHold
     private final AuthServer server;
 
     ChzzkAuthServerV1(
-            @NotNull String clientId, @NotNull String clientSecret, @NotNull String redirectUri,
+            @NotNull String clientId, @NotNull String clientSecret, @NotNull String baseUri,
             @NotNull String host, @Range(from = 0, to = 65535) int port,
             @NotNull Set<ChzzkEventHandler> handlers
     ) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.redirectUri = redirectUri;
+        this.baseUri = baseUri;
         this.host = host;
         this.port = port;
 

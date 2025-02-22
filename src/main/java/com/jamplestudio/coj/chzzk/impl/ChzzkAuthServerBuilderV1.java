@@ -14,7 +14,7 @@ public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
 
     private String clientId;
     private String clientSecret;
-    private String redirectUri;
+    private String baseUri;
     private String host = "0.0.0.0";
     private int port = 80;
 
@@ -33,8 +33,8 @@ public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
     }
 
     @Override
-    public @NotNull ChzzkAuthServerBuilder redirectUri(@NotNull String redirectUri) {
-        this.redirectUri = redirectUri;
+    public @NotNull ChzzkAuthServerBuilder baseUri(@NotNull String baseUri) {
+        this.baseUri = baseUri;
         return this;
     }
 
@@ -66,14 +66,14 @@ public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
     public @NotNull ChzzkAuthServer build() {
         if (clientId == null
                 || clientSecret == null
-                || redirectUri == null
+                || baseUri == null
                 || host == null
                 || port < 0
                 || port > 65535
         ) {
             throw new IllegalArgumentException("Missing required fields.");
         }
-        return new ChzzkAuthServerV1(clientId, clientSecret, redirectUri, host, port, handlers);
+        return new ChzzkAuthServerV1(clientId, clientSecret, baseUri, host, port, handlers);
     }
 
 }
