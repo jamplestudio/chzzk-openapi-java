@@ -57,10 +57,15 @@ public class AuthCallbackHandler implements HttpHandler {
 
         // 치지직 인스턴스 생성 (토큰 바인딩 안된 상태)
         ChzzkAuthServer chzzkServer = server.getChzzkAuthServer();
-        Chzzk chzzk = server.getChzzkAuthServer().newChzzkBuilder()
+        ChzzkBuilder chzzkBuilder = server.getChzzkAuthServer().newChzzkBuilder()
                 .clientId(chzzkServer.getClientId())
-                .clientSecret(chzzkServer.getClientSecret())
-                .build();
+                .clientSecret(chzzkServer.getClientSecret());
+
+        if (chzzkBuilder instanceof ChzzkEventHandlerHolder holder) {
+            chzzkBuilder.addEventHandler(holder.getHandlers());
+        }
+
+        Chzzk chzzk = chzzkBuilder.build();
 
         // 토큰 요청
         Optional<HttpRequestExecutor<AccessTokenGrantRequest, AccessTokenGrantResponse, OkHttpClient>> requester =

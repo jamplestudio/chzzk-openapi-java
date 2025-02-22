@@ -45,6 +45,10 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
         this.handlers = ImmutableSet.copyOf(handlers);
         this.httpRequestExecutorFactory = new HttpRequestExecutorFactoryV1();
         this.httpClient = ChzzkHttpClient.okhttp();
+
+        if (this.token != null) {
+            handlers.forEach(handler -> handler.onGrantToken(this));
+        }
     }
 
     @Override

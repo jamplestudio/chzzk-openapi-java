@@ -9,6 +9,8 @@ import com.jamplestudio.coj.chzzk.ChzzkToken;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 public class ChzzkBuilderV1 implements ChzzkBuilder {
@@ -37,7 +39,13 @@ public class ChzzkBuilderV1 implements ChzzkBuilder {
 
     @Override
     public @NotNull ChzzkBuilder addEventHandler(@NotNull ChzzkEventHandler... handlers) {
-        this.handlers.addAll(Lists.newArrayList(handlers));
+        Collections.addAll(this.handlers, handlers);
+        return this;
+    }
+
+    @Override
+    public @NotNull ChzzkBuilder addEventHandler(@NotNull Collection<ChzzkEventHandler> handlers) {
+        this.handlers.addAll(handlers);
         return this;
     }
 

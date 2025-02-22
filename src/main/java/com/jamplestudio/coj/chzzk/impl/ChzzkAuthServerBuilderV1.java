@@ -1,8 +1,14 @@
 package com.jamplestudio.coj.chzzk.impl;
 
+import com.google.common.collect.Sets;
 import com.jamplestudio.coj.chzzk.ChzzkAuthServer;
 import com.jamplestudio.coj.chzzk.ChzzkAuthServerBuilder;
+import com.jamplestudio.coj.chzzk.ChzzkEventHandler;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
 
@@ -11,6 +17,8 @@ public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
     private String redirectUri;
     private String host;
     private int port = 80;
+
+    private final Set<ChzzkEventHandler> handlers = Sets.newHashSet();
 
     @Override
     public @NotNull ChzzkAuthServerBuilder clientId(@NotNull String clientId) {
@@ -43,6 +51,18 @@ public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
     }
 
     @Override
+    public @NotNull ChzzkAuthServerBuilder addChzzkEventHandler(@NotNull ChzzkEventHandler... handlers) {
+        Collections.addAll(this.handlers, handlers);
+        return this;
+    }
+
+    @Override
+    public @NotNull ChzzkAuthServerBuilder addChzzkEventHandler(@NotNull Collection<ChzzkEventHandler> handlers) {
+        this.handlers.addAll(handlers);
+        return this;
+    }
+
+    @Override
     public @NotNull ChzzkAuthServer build() {
         if (clientId == null
                 || clientSecret == null
@@ -53,7 +73,7 @@ public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
         ) {
             throw new IllegalArgumentException("Missing required fields.");
         }
-        return new ChzzkAuthServerV1(clientId, clientSecret, redirectUri, host, port);
+        return new ChzzkAuthServerV1(clientId, clientSecret, redirectUri, host, port, handlers);
     }
 
 }
