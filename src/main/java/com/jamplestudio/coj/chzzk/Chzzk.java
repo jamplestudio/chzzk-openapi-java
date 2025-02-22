@@ -92,4 +92,8 @@ public interface Chzzk {
 
     void setLiveSettings(@NotNull ChzzkLiveSettings settings);
 
+    @NotNull CompletableFuture<Optional<ChzzkLiveStreamKey>> getLiveStreamKeyAsync();
+
+    @NotNull Optional<ChzzkLiveStreamKey> getLiveStreamKey();
+
 }

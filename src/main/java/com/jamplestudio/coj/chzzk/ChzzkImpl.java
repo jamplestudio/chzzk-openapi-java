@@ -328,4 +328,22 @@ public class ChzzkImpl implements Chzzk, ChzzkTokenMutator {
         executor.map(it -> it.execute(httpClient, requestInst));
     }
 
+    @Override
+    public @NotNull CompletableFuture<Optional<ChzzkLiveStreamKey>> getLiveStreamKeyAsync() {
+        return CompletableFuture.supplyAsync(this::getLiveStreamKey);
+    }
+
+    @Override
+    public @NotNull Optional<ChzzkLiveStreamKey> getLiveStreamKey() {
+        Optional<HttpRequestExecutor<LiveStreamKeyRequest, LiveStreamKeyResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("live_stream_key");
+
+        LiveStreamKeyRequest requestInst = new LiveStreamKeyRequest(token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ChzzkLiveStreamKey::of);
+    }
+
 }
