@@ -1,13 +1,13 @@
 package com.jamplestudio.coj.chzzk;
 
-import com.jamplestudio.coj.chzzk.impl.ChzzkAuthServerBuilderV1;
+import com.jamplestudio.coj.chzzk.impl.ChzzkAuthServerBuilderImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 public interface ChzzkAuthServer {
 
-    static @NotNull ChzzkAuthServerBuilder v1() {
-        return new ChzzkAuthServerBuilderV1();
+    static @NotNull ChzzkAuthServerBuilder builder() {
+        return new ChzzkAuthServerBuilderImpl();
     }
 
     @NotNull String getClientId();

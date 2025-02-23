@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
-public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
+public class ChzzkAuthServerBuilderImpl implements ChzzkAuthServerBuilder {
 
     private String clientId;
     private String clientSecret;
@@ -73,7 +73,7 @@ public class ChzzkAuthServerBuilderV1 implements ChzzkAuthServerBuilder {
         ) {
             throw new IllegalArgumentException("Missing required fields.");
         }
-        return new ChzzkAuthServerV1(clientId, clientSecret, baseUri, host, port, handlers);
+        return new ChzzkAuthServerImpl(clientId, clientSecret, baseUri, host, port, handlers);
     }
 
 }

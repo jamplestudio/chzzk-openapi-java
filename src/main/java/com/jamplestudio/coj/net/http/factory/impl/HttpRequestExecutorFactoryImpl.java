@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Optional;
 
-public class HttpRequestExecutorFactoryV1 implements HttpRequestExecutorFactory {
+public class HttpRequestExecutorFactoryImpl implements HttpRequestExecutorFactory {
 
     private final @NotNull Map<String, Class<? extends HttpRequestExecutor<?, ?, ?>>> types = Maps.newHashMap();
 

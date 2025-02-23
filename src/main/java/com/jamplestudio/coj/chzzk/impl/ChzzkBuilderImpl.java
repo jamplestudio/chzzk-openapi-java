@@ -12,14 +12,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
-public class ChzzkBuilderV1 implements ChzzkBuilder {
+public class ChzzkBuilderImpl implements ChzzkBuilder {
 
     private String clientId;
     private String clientSecret;
     private ChzzkToken token;
     private Set<ChzzkEventHandler> handlers = Sets.newHashSet();
     
-    public ChzzkBuilderV1() {}
+    public ChzzkBuilderImpl() {}
 
     public @NotNull ChzzkBuilder clientId(@NotNull String clientId) {
         this.clientId = clientId;
@@ -53,7 +53,7 @@ public class ChzzkBuilderV1 implements ChzzkBuilder {
             throw new IllegalArgumentException("Missing required fields.");
         }
 
-        return new ChzzkV1(clientId, clientSecret, token, handlers);
+        return new ChzzkImpl(clientId, clientSecret, token, handlers);
     }
 
 }
