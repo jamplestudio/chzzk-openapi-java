@@ -13,7 +13,7 @@ public class ChzzkAuthTest extends ChzzkTestBase {
 
     @Test
     public void test() {
-        // https://ezya.xyz/auth/login/chzzk
+        // https://ezya.xyz/auth/login/chzzk?user=qwer4321
         ChzzkAuthServer server = ChzzkAuthServer.builder()
                 .clientId(clientId)
                 .clientSecret(clientSecret)
