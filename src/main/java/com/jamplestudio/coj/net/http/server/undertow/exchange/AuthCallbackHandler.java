@@ -7,6 +7,7 @@ import com.jamplestudio.coj.net.data.AccessTokenGrantResponse;
 import com.jamplestudio.coj.net.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.net.http.executor.HttpRequestExecutor;
 import com.jamplestudio.coj.net.http.server.AuthServer;
+import com.jamplestudio.coj.utils.HttpExchangeQueryParameterParser;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.session.Session;
@@ -17,6 +18,7 @@ import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Deque;
 import java.util.Map;
 import java.util.Optional;
@@ -39,8 +41,8 @@ public class AuthCallbackHandler implements HttpHandler {
             session = manager.createSession(exchange, cookieConfig);
         }
 
-        String code = getQueryParam(exchange, "code");
-        String state = getQueryParam(exchange, "state");
+        String code = HttpExchangeQueryParameterParser.parse(exchange, "code");
+        String state = HttpExchangeQueryParameterParser.parse(exchange, "state");
 
         if (code == null) {
             exchange.setStatusCode(StatusCodes.BAD_REQUEST);
@@ -99,16 +101,10 @@ public class AuthCallbackHandler implements HttpHandler {
         }
 
         // 로그인 성공 안내
-        exchange.setStatusCode(StatusCodes.OK);
-    }
+        System.out.println("user: " + session.getAttribute("USER"));
 
-    private @Nullable String getQueryParam(HttpServerExchange exchange, String key) {
-        Map<String, Deque<String>> queryParams = exchange.getQueryParameters();
-        Deque<String> values = queryParams.get(key);
-        if (values == null || values.isEmpty()) {
-            return null;
-        }
-        return values.getFirst();
+        exchange.setStatusCode(StatusCodes.OK);
+        exchange.endExchange();
     }
 
 }
