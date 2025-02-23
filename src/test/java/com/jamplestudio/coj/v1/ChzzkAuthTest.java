@@ -4,8 +4,10 @@ import com.jamplestudio.coj.ChzzkTestBase;
 import com.jamplestudio.coj.chzzk.Chzzk;
 import com.jamplestudio.coj.chzzk.ChzzkAuthServer;
 import com.jamplestudio.coj.chzzk.ChzzkEventHandler;
+import com.jamplestudio.coj.chzzk.data.ChzzkChatMessage;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+
 
 public class ChzzkAuthTest extends ChzzkTestBase {
 
@@ -19,24 +21,19 @@ public class ChzzkAuthTest extends ChzzkTestBase {
                 .addChzzkEventHandler(new ChzzkEventHandler() {
                     @Override
                     public void onGrantToken(@NotNull Chzzk chzzk) {
-                        System.out.println("Token: " + chzzk.getToken());
-
-                        chzzk.getSessionUrl().ifPresentOrElse(url -> {
-                            System.out.println("SessionUrl: " + url);
-                        }, () -> {
-                            System.out.println("SessionUrl empty");
-                        });
+                        chzzk.refreshToken();
                     }
 
                     @Override
                     public void onRefreshToken(@NotNull Chzzk chzzk) {
-                        ChzzkEventHandler.super.onRefreshToken(chzzk);
+                        chzzk.getSession().connect();
                     }
 
                     @Override
-                    public void onRevokeToken(@NotNull Chzzk chzzk) {
-                        ChzzkEventHandler.super.onRevokeToken(chzzk);
+                    public void onChatMessage(@NotNull Chzzk chzzk, @NotNull ChzzkChatMessage message) {
+                        System.out.println("Chat: " + message);
                     }
+
                 })
                 .build();
 
@@ -44,7 +41,7 @@ public class ChzzkAuthTest extends ChzzkTestBase {
 
         while (true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
