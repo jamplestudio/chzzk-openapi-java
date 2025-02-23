@@ -20,8 +20,6 @@ public interface ChzzkAuthServer {
 
     @Range(from = 0, to = 65535) int getPort();
 
-    @NotNull ChzzkBuilder newChzzkBuilder();
-
     void start();
 
     void stop();

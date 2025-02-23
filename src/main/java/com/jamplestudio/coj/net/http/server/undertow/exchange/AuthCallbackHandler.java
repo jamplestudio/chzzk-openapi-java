@@ -7,6 +7,8 @@ import com.jamplestudio.coj.net.data.AccessTokenGrantResponse;
 import com.jamplestudio.coj.net.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.net.http.executor.HttpRequestExecutor;
 import com.jamplestudio.coj.net.http.server.AuthServer;
+import com.jamplestudio.coj.net.http.server.AuthServerHandler;
+import com.jamplestudio.coj.net.http.server.undertow.AuthResult;
 import com.jamplestudio.coj.utils.HttpExchangeQueryParameterParser;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -47,6 +49,8 @@ public class AuthCallbackHandler implements HttpHandler {
         if (code == null) {
             exchange.setStatusCode(StatusCodes.BAD_REQUEST);
             exchange.getResponseSender().send("Invalid code parameter");
+            AuthResult result = new AuthResult("", "", AuthResult.Type.INVALID_CODE_PARAMETER, null);
+            server.getHandler().onFailure(server, result);
             return;
         }
 
@@ -55,55 +59,18 @@ public class AuthCallbackHandler implements HttpHandler {
         if (savedState == null || !savedState.equals(state)) {
             exchange.setStatusCode(StatusCodes.BAD_REQUEST);
             exchange.getResponseSender().send("Invalid state parameter");
+            AuthResult result = new AuthResult("", "", AuthResult.Type.INVALID_STATE_PARAMETER, null);
+            server.getHandler().onFailure(server, result);
             return;
-        }
-
-        // 치지직 인스턴스 생성 (토큰 바인딩 안된 상태)
-        ChzzkAuthServer chzzkServer = server.getChzzkAuthServer();
-        ChzzkBuilder chzzkBuilder = server.getChzzkAuthServer().newChzzkBuilder()
-                .clientId(chzzkServer.getClientId())
-                .clientSecret(chzzkServer.getClientSecret());
-
-        if (chzzkServer instanceof ChzzkEventHandlerHolder holder) {
-            chzzkBuilder.addEventHandler(holder.getHandlers());
-        }
-
-        Chzzk chzzk = chzzkBuilder.build();
-
-        // 토큰 요청
-        Optional<HttpRequestExecutor<AccessTokenGrantRequest, AccessTokenGrantResponse, OkHttpClient>> requester =
-                chzzk.getHttpRequestExecutorFactory().create("access_token_grant");
-
-        if (requester.isEmpty()) {
-            exchange.setStatusCode(StatusCodes.BAD_REQUEST);
-            exchange.getResponseSender().send("Invalid http requester.");
-            return;
-        }
-
-        AccessTokenGrantRequest requestInst = new AccessTokenGrantRequest(chzzkServer.getClientId(), chzzkServer.getClientSecret(), code, state);
-        Optional<AccessTokenGrantResponse> responseInst = requester.get().execute(ChzzkHttpClient.okhttp(), requestInst);
-
-        if (responseInst.isEmpty()) {
-            exchange.setStatusCode(StatusCodes.UNAUTHORIZED);
-            exchange.getResponseSender().send("Failed to get access token");
-            return;
-        }
-
-        // 토큰 바인드
-        ChzzkToken token = new ChzzkToken(responseInst.get().accessToken(), responseInst.get().refreshToken());
-        if (chzzk instanceof ChzzkTokenMutator mutator) {
-            mutator.setToken(token);
-
-            // 치지직 토큰 발급 이벤트 호출
-            if (chzzk instanceof ChzzkEventHandlerHolder holder) {
-                holder.getHandlers().forEach(handler -> handler.onGrantToken(chzzk));
-            }
         }
 
         // 로그인 성공 안내
-        System.out.println("user: " + session.getAttribute("USER"));
+        String user = (String) session.getAttribute("USER");
+        AuthResult result = new AuthResult(code, state, AuthResult.Type.SUCCESS, user);
+        server.getHandler().onSuccess(server, result);
 
         exchange.setStatusCode(StatusCodes.OK);
+        exchange.getResponseSender().send("Success!");
         exchange.endExchange();
     }
 

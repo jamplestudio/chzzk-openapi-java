@@ -13,6 +13,8 @@ public interface AuthServer {
 
     @NotNull SessionCookieConfig getSessionCookieConfig();
 
+    @NotNull AuthServerHandler getHandler();
+
     void start();
 
     void stop();

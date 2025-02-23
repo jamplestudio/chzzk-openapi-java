@@ -66,7 +66,6 @@ public class ChzzkSessionImpl implements ChzzkSession {
 
                 @Override
                 public void onConnected(@NotNull SessionSocket session, @NotNull ConnectedMessage message) {
-                    System.out.println("Connected.");
                     chzzk.subscribeChat(message.data().sessionKey());
                     chzzk.subscribeDonation(message.data().sessionKey());
                 }
