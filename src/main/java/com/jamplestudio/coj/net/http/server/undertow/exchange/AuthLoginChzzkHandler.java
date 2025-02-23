@@ -2,6 +2,7 @@ package com.jamplestudio.coj.net.http.server.undertow.exchange;
 
 import com.jamplestudio.coj.chzzk.ChzzkAuthServer;
 import com.jamplestudio.coj.net.http.server.AuthServer;
+import com.jamplestudio.coj.utils.CSRFTokenGenerator;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.session.Session;
@@ -33,7 +34,7 @@ public class AuthLoginChzzkHandler implements HttpHandler {
         }
 
         // CSRF 방지를 위한 state 값 생성
-        String state = UUID.randomUUID().toString().replace("-", "");
+        String state = CSRFTokenGenerator.generateDefault();
         session.setAttribute("OAUTH_STATE", state);
 
         ChzzkAuthServer chzzk = server.getChzzkAuthServer();
