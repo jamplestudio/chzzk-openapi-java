@@ -2,6 +2,7 @@ package com.jamplestudio.coj.net.http.server.undertow;
 
 import com.jamplestudio.coj.chzzk.ChzzkAuthServer;
 import com.jamplestudio.coj.net.http.server.AuthServer;
+import com.jamplestudio.coj.net.http.server.AuthServerHandler;
 import com.jamplestudio.coj.net.http.server.undertow.exchange.AuthCallbackHandler;
 import com.jamplestudio.coj.net.http.server.undertow.exchange.AuthLoginChzzkHandler;
 import io.undertow.Undertow;
@@ -29,9 +30,11 @@ public class UndertowAuthServer implements AuthServer {
     private final Undertow server;
 
     private final @NotNull ChzzkAuthServer chzzkAuthServer;
+    private final @NotNull AuthServerHandler handler;
 
-    public UndertowAuthServer(@NotNull ChzzkAuthServer chzzkAuthServer) {
+    public UndertowAuthServer(@NotNull ChzzkAuthServer chzzkAuthServer, @NotNull AuthServerHandler handler) {
         this.chzzkAuthServer = chzzkAuthServer;
+        this.handler = handler;
 
         routing.get("/auth/login/chzzk", new AuthLoginChzzkHandler(this));
         routing.get("/auth/callback", new AuthCallbackHandler(this));

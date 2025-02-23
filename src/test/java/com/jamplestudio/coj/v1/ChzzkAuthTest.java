@@ -6,6 +6,7 @@ import com.jamplestudio.coj.chzzk.ChzzkAuthServer;
 import com.jamplestudio.coj.chzzk.ChzzkEventHandler;
 import com.jamplestudio.coj.chzzk.data.ChzzkChatMessage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 
@@ -13,7 +14,7 @@ public class ChzzkAuthTest extends ChzzkTestBase {
 
     @Test
     public void test() {
-        // https://ezya.xyz/auth/login/chzzk
+        // https://ezya.xyz/auth/login/chzzk?user=qwer4321
         ChzzkAuthServer server = ChzzkAuthServer.builder()
                 .clientId(clientId)
                 .clientSecret(clientSecret)
@@ -34,6 +35,10 @@ public class ChzzkAuthTest extends ChzzkTestBase {
                         System.out.println("Chat: " + message);
                     }
 
+                    @Override
+                    public void onUserRegistered(@NotNull Chzzk chzzk, @Nullable String user) {
+                        System.out.println("User: " + user);
+                    }
                 })
                 .build();
 
