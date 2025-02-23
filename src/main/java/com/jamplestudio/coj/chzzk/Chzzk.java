@@ -97,4 +97,26 @@ public interface Chzzk {
 
     @NotNull Optional<ChzzkSessionUrl> getSessionUrl();
 
+    @NotNull ChzzkSession getSession();
+
+    @NotNull CompletableFuture<List<ChzzkSessionSearchResult>> searchSessionsAsync(@Range(from = 1, to = 50) int amount, @Range(from = 0, to = Integer.MAX_VALUE) int page);
+
+    @NotNull List<ChzzkSessionSearchResult> searchSessions(@Range(from = 1, to = 50) int amount, @Range(from = 0, to = Integer.MAX_VALUE) int page);
+
+    @NotNull CompletableFuture<Void> subscribeChatAsync(@NotNull String sessionKey);
+
+    void subscribeChat(@NotNull String sessionKey);
+
+    @NotNull CompletableFuture<Void> unsubscribeChatAsync(@NotNull String sessionKey);
+
+    void unsubscribeChat(@NotNull String sessionKey);
+
+    @NotNull CompletableFuture<Void> subscribeDonationAsync(@NotNull String sessionKey);
+
+    void subscribeDonation(@NotNull String sessionKey);
+
+    @NotNull CompletableFuture<Void> unsubscribeDonationAsync(@NotNull String sessionKey);
+
+    void unsubscribeDonation(@NotNull String sessionKey);
+
 }

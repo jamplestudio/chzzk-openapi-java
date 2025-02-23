@@ -1,8 +1,9 @@
-package com.jamplestudio.coj.net.http.factory;
+package com.jamplestudio.coj.net.http.factory.impl;
 
 import com.google.common.collect.Maps;
 import com.jamplestudio.coj.net.http.executor.HttpRequestExecutor;
 import com.jamplestudio.coj.net.http.executor.okhttp.*;
+import com.jamplestudio.coj.net.http.factory.HttpRequestExecutorFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +33,11 @@ public class HttpRequestExecutorFactoryV1 implements HttpRequestExecutorFactory 
         types.put("live_stream_key", LiveStreamKeyExecutor.class);
         types.put("user_information", UserInformationExecutor.class);
         types.put("session_url", SessionUrlExecutor.class);
+        types.put("chat_event_subscribe", ChatEventSubscribeExecutor.class);
+        types.put("chat_event_unsubscribe", ChatEventUnsubscribeExecutor.class);
+        types.put("donation_event_subscribe", DonationEventSubscribeExecutor.class);
+        types.put("donation_event_unsubscribe", DonationEventUnsubscribeExecutor.class);
+        types.put("session_search", SessionSearchExecutor.class);
     }
 
     @Override

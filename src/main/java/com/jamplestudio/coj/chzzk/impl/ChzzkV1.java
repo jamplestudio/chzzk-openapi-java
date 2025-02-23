@@ -9,7 +9,7 @@ import com.jamplestudio.coj.net.data.*;
 import com.jamplestudio.coj.net.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.net.http.executor.HttpRequestExecutor;
 import com.jamplestudio.coj.net.http.factory.HttpRequestExecutorFactory;
-import com.jamplestudio.coj.net.http.factory.HttpRequestExecutorFactoryV1;
+import com.jamplestudio.coj.net.http.factory.impl.HttpRequestExecutorFactoryV1;
 import lombok.Getter;
 import lombok.Setter;
 import okhttp3.OkHttpClient;
@@ -37,6 +37,8 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
     private final @NotNull HttpRequestExecutorFactory httpRequestExecutorFactory;
     private final @NotNull ChzzkHttpClient<OkHttpClient> httpClient;
 
+    private final @NotNull ChzzkSession session;
+
     ChzzkV1(
             @NotNull String clientId, @NotNull String clientSecret,
             @Nullable ChzzkToken token, @NotNull Set<ChzzkEventHandler> handlers
@@ -47,6 +49,7 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
         this.handlers = ImmutableSet.copyOf(handlers);
         this.httpRequestExecutorFactory = new HttpRequestExecutorFactoryV1();
         this.httpClient = ChzzkHttpClient.okhttp();
+        this.session = new ChzzkSessionV1(this);
 
         if (this.token != null) {
             handlers.forEach(handler -> handler.onGrantToken(this));
@@ -448,6 +451,107 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(it -> new ChzzkSessionUrl(it.url()));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<List<ChzzkSessionSearchResult>> searchSessionsAsync(@Range(
+            from = 1, to = 50) int amount, @Range(from = 0, to = Integer.MAX_VALUE) int page) {
+        return CompletableFuture.supplyAsync(() -> searchSessions(amount, page));
+    }
+
+    @Override
+    public @NotNull List<ChzzkSessionSearchResult> searchSessions(
+            @Range(from = 1, to = 50) int amount, @Range(from = 0, to = Integer.MAX_VALUE) int page) {
+
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
+        Optional<HttpRequestExecutor<SessionSearchRequest, SessionSearchResponse, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("session_search");
+
+        SessionSearchRequest requestInst = new SessionSearchRequest(amount, Integer.toString(page), token.accessToken());
+        return executor
+                .map(it -> it.execute(httpClient, requestInst))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(SessionSearchResponse::data)
+                .orElse(Lists.newArrayList())
+                .stream()
+                .map(ChzzkSessionSearchResult::of)
+                .toList();
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Void> subscribeChatAsync(@NotNull String sessionKey) {
+        return CompletableFuture.runAsync(() -> subscribeChat(sessionKey));
+    }
+
+    @Override
+    public void subscribeChat(@NotNull String sessionKey) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
+        Optional<HttpRequestExecutor<ChatEventSubscribeRequest, Void, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("chat_event_subscribe");
+
+        ChatEventSubscribeRequest requestInst = new ChatEventSubscribeRequest(sessionKey, token.accessToken());
+        executor.map(it -> it.execute(httpClient, requestInst));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Void> unsubscribeChatAsync(@NotNull String sessionKey) {
+        return CompletableFuture.runAsync(() -> unsubscribeChat(sessionKey));
+    }
+
+    @Override
+    public void unsubscribeChat(@NotNull String sessionKey) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
+        Optional<HttpRequestExecutor<ChatEventUnsubscribeRequest, Void, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("chat_event_unsubscribe");
+
+        ChatEventUnsubscribeRequest requestInst = new ChatEventUnsubscribeRequest(sessionKey, token.accessToken());
+        executor.map(it -> it.execute(httpClient, requestInst));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Void> subscribeDonationAsync(@NotNull String sessionKey) {
+        return CompletableFuture.runAsync(() -> subscribeDonation(sessionKey));
+    }
+
+    @Override
+    public void subscribeDonation(@NotNull String sessionKey) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
+        Optional<HttpRequestExecutor<DonationEventSubscribeRequest, Void, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("donation_event_subscribe");
+
+        DonationEventSubscribeRequest requestInst = new DonationEventSubscribeRequest(sessionKey, token.accessToken());
+        executor.map(it -> it.execute(httpClient, requestInst));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Void> unsubscribeDonationAsync(@NotNull String sessionKey) {
+        return CompletableFuture.runAsync(() -> unsubscribeDonation(sessionKey));
+    }
+
+    @Override
+    public void unsubscribeDonation(@NotNull String sessionKey) {
+        if (token == null) {
+            throw new InvalidTokenException("Token cannot be null.");
+        }
+
+        Optional<HttpRequestExecutor<DonationEventUnsubscribeRequest, Void, OkHttpClient>> executor =
+                httpRequestExecutorFactory.create("donation_event_unsubscribe");
+
+        DonationEventUnsubscribeRequest requestInst = new DonationEventUnsubscribeRequest(sessionKey, token.accessToken());
+        executor.map(it -> it.execute(httpClient, requestInst));
     }
 
 }
