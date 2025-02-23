@@ -14,6 +14,8 @@ import io.undertow.server.session.SessionCookieConfig;
 import io.undertow.server.session.SessionManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.xnio.Options;
+import org.xnio.Sequence;
 
 import java.util.UUID;
 
@@ -44,6 +46,7 @@ public class UndertowAuthServer implements AuthServer {
 
         server = Undertow.builder()
                 .addHttpListener(chzzkAuthServer.getPort(), chzzkAuthServer.getHost())
+                .setSocketOption(Options.SSL_ENABLED_PROTOCOLS, Sequence.of("TLSv1.2", "TLSv1.3"))
                 .setHandler(pathHandler)
                 .build();
     }
