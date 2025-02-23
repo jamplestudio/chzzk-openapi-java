@@ -14,7 +14,7 @@ public class ChzzkAuthTest extends ChzzkTestBase {
     @Test
     public void test() {
         // https://ezya.xyz/auth/login/chzzk
-        ChzzkAuthServer server = ChzzkAuthServer.v1()
+        ChzzkAuthServer server = ChzzkAuthServer.builder()
                 .clientId(clientId)
                 .clientSecret(clientSecret)
                 .baseUri(baseUri)

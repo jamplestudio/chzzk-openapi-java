@@ -1,7 +1,7 @@
 package com.jamplestudio.coj.chzzk;
 
 import com.jamplestudio.coj.chzzk.data.*;
-import com.jamplestudio.coj.chzzk.impl.ChzzkBuilderV1;
+import com.jamplestudio.coj.chzzk.impl.ChzzkBuilderImpl;
 import com.jamplestudio.coj.net.http.factory.HttpRequestExecutorFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -13,8 +13,8 @@ import java.util.concurrent.CompletableFuture;
 
 public interface Chzzk {
 
-    static @NotNull ChzzkBuilder v1() {
-        return new ChzzkBuilderV1();
+    static @NotNull ChzzkBuilder builder() {
+        return new ChzzkBuilderImpl();
     }
 
     @NotNull String getClientId();

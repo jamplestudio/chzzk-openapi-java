@@ -9,7 +9,7 @@ import com.jamplestudio.coj.net.data.*;
 import com.jamplestudio.coj.net.http.client.ChzzkHttpClient;
 import com.jamplestudio.coj.net.http.executor.HttpRequestExecutor;
 import com.jamplestudio.coj.net.http.factory.HttpRequestExecutorFactory;
-import com.jamplestudio.coj.net.http.factory.impl.HttpRequestExecutorFactoryV1;
+import com.jamplestudio.coj.net.http.factory.impl.HttpRequestExecutorFactoryImpl;
 import lombok.Getter;
 import lombok.Setter;
 import okhttp3.OkHttpClient;
@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Getter
 @Setter
-public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolder {
+public class ChzzkImpl implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolder {
 
     private final @NotNull String clientId;
     private final @NotNull String clientSecret;
@@ -39,7 +39,7 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     private final @NotNull ChzzkSession session;
 
-    ChzzkV1(
+    ChzzkImpl(
             @NotNull String clientId, @NotNull String clientSecret,
             @Nullable ChzzkToken token, @NotNull Set<ChzzkEventHandler> handlers
     ) {
@@ -47,9 +47,9 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
         this.clientSecret = clientSecret;
         this.token = token;
         this.handlers = ImmutableSet.copyOf(handlers);
-        this.httpRequestExecutorFactory = new HttpRequestExecutorFactoryV1();
+        this.httpRequestExecutorFactory = new HttpRequestExecutorFactoryImpl();
         this.httpClient = ChzzkHttpClient.okhttp();
-        this.session = new ChzzkSessionV1(this);
+        this.session = new ChzzkSessionImpl(this);
 
         if (this.token != null) {
             handlers.forEach(handler -> handler.onGrantToken(this));

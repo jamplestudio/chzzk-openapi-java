@@ -1,19 +1,19 @@
-package com.jamplestudio.coj.net.socket;
+package com.jamplestudio.coj.net.socket.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.jamplestudio.coj.net.data.message.*;
+import com.jamplestudio.coj.net.socket.SessionSocket;
+import com.jamplestudio.coj.net.socket.SessionSocketHandler;
 import com.jamplestudio.coj.utils.Constants;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URISyntaxException;
-import java.util.Arrays;
 
 @Getter
 public class SessionSocketImpl implements SessionSocket {

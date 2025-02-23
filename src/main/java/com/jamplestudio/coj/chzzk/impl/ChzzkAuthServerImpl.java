@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Range;
 import java.util.Set;
 
 @Getter
-public class ChzzkAuthServerV1 implements ChzzkAuthServer, ChzzkEventHandlerHolder {
+public class ChzzkAuthServerImpl implements ChzzkAuthServer, ChzzkEventHandlerHolder {
 
     private final @NotNull String clientId;
     private final @NotNull String clientSecret;
@@ -25,7 +25,7 @@ public class ChzzkAuthServerV1 implements ChzzkAuthServer, ChzzkEventHandlerHold
     private final @NotNull ImmutableSet<ChzzkEventHandler> handlers;
     private final AuthServer server;
 
-    ChzzkAuthServerV1(
+    ChzzkAuthServerImpl(
             @NotNull String clientId, @NotNull String clientSecret, @NotNull String baseUri,
             @NotNull String host, @Range(from = 0, to = 65535) int port,
             @NotNull Set<ChzzkEventHandler> handlers
@@ -42,7 +42,7 @@ public class ChzzkAuthServerV1 implements ChzzkAuthServer, ChzzkEventHandlerHold
 
     @Override
     public @NotNull ChzzkBuilder newChzzkBuilder() {
-        return new ChzzkBuilderV1();
+        return new ChzzkBuilderImpl();
     }
 
     @Override

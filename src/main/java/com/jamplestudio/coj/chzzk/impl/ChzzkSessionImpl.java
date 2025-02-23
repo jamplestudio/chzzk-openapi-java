@@ -1,20 +1,16 @@
 package com.jamplestudio.coj.chzzk.impl;
 
 import com.jamplestudio.coj.chzzk.Chzzk;
-import com.jamplestudio.coj.chzzk.ChzzkEventHandler;
 import com.jamplestudio.coj.chzzk.ChzzkEventHandlerHolder;
 import com.jamplestudio.coj.chzzk.ChzzkSession;
 import com.jamplestudio.coj.chzzk.data.ChzzkChatMessage;
 import com.jamplestudio.coj.chzzk.data.ChzzkDonationMessage;
 import com.jamplestudio.coj.chzzk.data.ChzzkSessionUrl;
-import com.jamplestudio.coj.net.data.ChatEventSubscribeRequest;
 import com.jamplestudio.coj.net.data.message.*;
-import com.jamplestudio.coj.net.http.executor.HttpRequestExecutor;
 import com.jamplestudio.coj.net.socket.SessionSocket;
 import com.jamplestudio.coj.net.socket.SessionSocketHandler;
-import com.jamplestudio.coj.net.socket.SessionSocketImpl;
+import com.jamplestudio.coj.net.socket.impl.SessionSocketImpl;
 import lombok.Getter;
-import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URISyntaxException;
@@ -22,13 +18,13 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Getter
-public class ChzzkSessionV1 implements ChzzkSession {
+public class ChzzkSessionImpl implements ChzzkSession {
 
     private final @NotNull Chzzk chzzk;
 
     private SessionSocket socket;
 
-    ChzzkSessionV1(@NotNull Chzzk chzzk) {
+    ChzzkSessionImpl(@NotNull Chzzk chzzk) {
         this.chzzk = chzzk;
     }
 
