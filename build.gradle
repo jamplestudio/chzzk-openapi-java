@@ -25,7 +25,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.12.1'
 
     // https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine
-    implementation 'com.github.ben-manes.caffeine:caffeine:3.2.0'
+    // implementation 'com.github.ben-manes.caffeine:caffeine:3.2.0'
 
     // https://mvnrepository.com/artifact/io.undertow/undertow-core
     implementation 'io.undertow:undertow-core:2.3.18.Final'
@@ -63,4 +63,8 @@ tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
     }
+}
+
+shadowJar {
+    setArchiveFileName("chzzk-openapi-java.jar")
 }
