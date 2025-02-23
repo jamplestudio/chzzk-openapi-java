@@ -1,12 +1,17 @@
-package com.jamplestudio.coj.chzzk;
+package com.jamplestudio.coj.chzzk.data;
 
 import com.jamplestudio.coj.net.data.ChatSettingsResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
-public interface ChzzkChatSettings {
+public record ChzzkChatSettings(
+        @NotNull ChzzkChatAvailableCondition chatAvailableCondition,
+        @NotNull ChzzkChatAvailableGroup chatAvailableGroup,
+        @Range(from = 0, to = Integer.MAX_VALUE) int minimumFollowerTimeInMinutes,
+        boolean isSubscriberAllowedInFollowerMode
+) {
 
-    static @NotNull ChzzkChatSettings of(@NotNull ChatSettingsResponse response) {
+    public static @NotNull ChzzkChatSettings of(@NotNull ChatSettingsResponse response) {
         return of(
                 ChzzkChatAvailableCondition.fromString(response.chatAvailableCondition()),
                 ChzzkChatAvailableGroup.fromString(response.chatAvailableGroup()),
@@ -15,21 +20,13 @@ public interface ChzzkChatSettings {
         );
     }
 
-    static @NotNull ChzzkChatSettings of(
+    public static @NotNull ChzzkChatSettings of(
             @NotNull ChzzkChatAvailableCondition condition,
             @NotNull ChzzkChatAvailableGroup group,
             @Range(from = 0, to = Integer.MAX_VALUE) int minimumFollowerTimeInMinutes,
             boolean subscriberAllowedInFollowerMode
     ) {
-        return new ChzzkChatSettingsImpl(condition, group, minimumFollowerTimeInMinutes, subscriberAllowedInFollowerMode);
+        return new ChzzkChatSettings(condition, group, minimumFollowerTimeInMinutes, subscriberAllowedInFollowerMode);
     }
-
-    @NotNull ChzzkChatAvailableCondition getChatAvailableCondition();
-
-    @NotNull ChzzkChatAvailableGroup getChatAvailableGroup();
-
-    @Range(from = 0, to = Integer.MAX_VALUE) int getMinimumFollowerTimeInMinutes();
-
-    boolean isSubscriberAllowedInFollowerMode();
 
 }

@@ -1,6 +1,7 @@
 package com.jamplestudio.coj.net.http.server.undertow.exchange;
 
 import com.jamplestudio.coj.chzzk.*;
+import com.jamplestudio.coj.chzzk.data.ChzzkToken;
 import com.jamplestudio.coj.net.data.AccessTokenGrantRequest;
 import com.jamplestudio.coj.net.data.AccessTokenGrantResponse;
 import com.jamplestudio.coj.net.http.client.ChzzkHttpClient;

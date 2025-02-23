@@ -1,11 +1,10 @@
 package com.jamplestudio.coj.chzzk.impl;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.jamplestudio.coj.chzzk.Chzzk;
 import com.jamplestudio.coj.chzzk.ChzzkBuilder;
 import com.jamplestudio.coj.chzzk.ChzzkEventHandler;
-import com.jamplestudio.coj.chzzk.ChzzkToken;
+import com.jamplestudio.coj.chzzk.data.ChzzkToken;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

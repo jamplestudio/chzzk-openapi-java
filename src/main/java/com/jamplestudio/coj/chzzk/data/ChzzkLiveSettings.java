@@ -1,13 +1,20 @@
-package com.jamplestudio.coj.chzzk;
+package com.jamplestudio.coj.chzzk.data;
 
 import com.jamplestudio.coj.net.data.LiveSettingsResponse;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface ChzzkLiveSettings {
+public record ChzzkLiveSettings(
+        @NotNull String liveTitle,
+        @NotNull ChzzkCategoryType categoryType,
+        @NotNull String categoryId,
+        @NotNull String categoryName,
+        @NotNull String categoryPosterImageUrl,
+        @NotNull List<String> tags
+) {
 
-    static @NotNull ChzzkLiveSettings of(@NotNull LiveSettingsResponse response) {
+    public static @NotNull ChzzkLiveSettings of(@NotNull LiveSettingsResponse response) {
         return of(
                 response.defaultLiveTitle(), ChzzkCategoryType.fromString(response.category().categoryType()),
                 response.category().categoryId(), response.category().categoryValue(),
@@ -15,31 +22,19 @@ public interface ChzzkLiveSettings {
         );
     }
 
-    static @NotNull ChzzkLiveSettings of(
+    public static @NotNull ChzzkLiveSettings of(
             @NotNull String title, @NotNull ChzzkCategoryType categoryType,
             @NotNull String categoryId, @NotNull List<String> tags
     ) {
         return of(title, categoryType, categoryId, "", "", tags);
     }
 
-    static @NotNull ChzzkLiveSettings of(
+    public static @NotNull ChzzkLiveSettings of(
             @NotNull String liveTitle, @NotNull ChzzkCategoryType categoryType,
             @NotNull String categoryId, @NotNull String categoryName,
             @NotNull String categoryPosterImageUrl, @NotNull List<String> tags
     ) {
-        return new ChzzkLiveSettingsImpl(liveTitle, categoryType, categoryId, categoryName, categoryPosterImageUrl, tags);
+        return new ChzzkLiveSettings(liveTitle, categoryType, categoryId, categoryName, categoryPosterImageUrl, tags);
     }
-
-    @NotNull String getLiveTitle();
-
-    @NotNull ChzzkCategoryType getCategoryType();
-
-    @NotNull String getCategoryId();
-
-    @NotNull String getCategoryName();
-
-    @NotNull String getCategoryPosterImageUrl();
-
-    @NotNull List<String> getTags();
 
 }

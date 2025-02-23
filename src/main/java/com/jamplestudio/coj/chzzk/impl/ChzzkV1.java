@@ -3,6 +3,7 @@ package com.jamplestudio.coj.chzzk.impl;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.jamplestudio.coj.chzzk.*;
+import com.jamplestudio.coj.chzzk.data.*;
 import com.jamplestudio.coj.exception.InvalidTokenException;
 import com.jamplestudio.coj.net.data.*;
 import com.jamplestudio.coj.net.http.client.ChzzkHttpClient;
@@ -139,7 +140,7 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
 
     @Override
     public @NotNull Optional<ChzzkChannel> getCurrentChannel() {
-        return getCurrentUser().flatMap(chzzkUser -> getChannel(chzzkUser.getId()));
+        return getCurrentUser().flatMap(user -> getChannel(user.id()));
     }
 
     @Override
@@ -352,9 +353,9 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
                 httpRequestExecutorFactory.create("chat_settings_change");
 
         ChatSettingsChangeRequest requestInst = new ChatSettingsChangeRequest(
-                settings.getChatAvailableCondition().toString(),
-                settings.getChatAvailableGroup().toString(),
-                settings.getMinimumFollowerTimeInMinutes(),
+                settings.chatAvailableCondition().toString(),
+                settings.chatAvailableGroup().toString(),
+                settings.minimumFollowerTimeInMinutes(),
                 settings.isSubscriberAllowedInFollowerMode(),
                 token.accessToken()
         );
@@ -398,8 +399,8 @@ public class ChzzkV1 implements Chzzk, ChzzkTokenMutator, ChzzkEventHandlerHolde
                 httpRequestExecutorFactory.create("live_settings_change");
 
         LiveSettingsChangeRequest requestInst = new LiveSettingsChangeRequest(
-                settings.getLiveTitle(), settings.getCategoryType().toString(),
-                settings.getCategoryId(), settings.getTags(),
+                settings.liveTitle(), settings.categoryType().toString(),
+                settings.categoryId(), settings.tags(),
                 token.accessToken()
         );
         executor.map(it -> it.execute(httpClient, requestInst));

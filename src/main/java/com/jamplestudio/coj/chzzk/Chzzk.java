@@ -1,5 +1,6 @@
 package com.jamplestudio.coj.chzzk;
 
+import com.jamplestudio.coj.chzzk.data.*;
 import com.jamplestudio.coj.chzzk.impl.ChzzkBuilderV1;
 import com.jamplestudio.coj.net.http.factory.HttpRequestExecutorFactory;
 import org.jetbrains.annotations.NotNull;
