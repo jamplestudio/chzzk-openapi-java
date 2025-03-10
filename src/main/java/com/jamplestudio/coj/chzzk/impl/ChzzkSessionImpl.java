@@ -66,6 +66,7 @@ public class ChzzkSessionImpl implements ChzzkSession {
 
                 @Override
                 public void onConnected(@NotNull SessionSocket session, @NotNull ConnectedMessage message) {
+                    System.out.println("Chzzk Session Connected.");
                     chzzk.subscribeChat(message.data().sessionKey());
                     chzzk.subscribeDonation(message.data().sessionKey());
                 }
@@ -80,6 +81,7 @@ public class ChzzkSessionImpl implements ChzzkSession {
 
                 @Override
                 public void onDonationMessageReceived(@NotNull SessionSocket session, @NotNull DonationMessage message) {
+                    System.out.println("Receive Donation Message: " + message);
                     if (chzzk instanceof ChzzkEventHandlerHolder holder) {
                         ChzzkDonationMessage chzzkMessage = ChzzkDonationMessage.of(message);
                         holder.getHandlers().forEach(handler -> handler.onDonationMessage(chzzk, chzzkMessage));

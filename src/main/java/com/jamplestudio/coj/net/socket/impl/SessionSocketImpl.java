@@ -54,18 +54,22 @@ public class SessionSocketImpl implements SessionSocket {
                 case "connected" -> {
                     ConnectedMessage message = Constants.GSON.fromJson(element, ConnectedMessage.class);
                     this.sessionKey = message.data().sessionKey();
+                    System.out.println("Connected Session: " + message);
                     handler.onConnected(this, message);
                 }
                 case "subscribed" -> {
                     EventSubscribedMessage message = Constants.GSON.fromJson(element, EventSubscribedMessage.class);
+                    System.out.println("Subscribe Event: " + message);
                     handler.onEventSubscribed(this, message);
                 }
                 case "unsubscribed" -> {
                     EventUnsubscribedMessage message = Constants.GSON.fromJson(element, EventUnsubscribedMessage.class);
+                    System.out.println("Unsubscribed Event: " + message);
                     handler.onEventUnsubscribed(this, message);
                 }
                 case "revoked" -> {
                     EventRevokedMessage message = Constants.GSON.fromJson(element, EventRevokedMessage.class);
+                    System.out.println("Revoked Event: " + message);
                     handler.onEventRevoked(this, message);
                 }
             }
@@ -88,6 +92,7 @@ public class SessionSocketImpl implements SessionSocket {
 
             String json = objects[0].toString();
             DonationMessage message = Constants.GSON.fromJson(json, DonationMessage.class);
+            System.out.println("Donation Event: " + message);
             handler.onDonationMessageReceived(this, message);
         });
     }
@@ -95,6 +100,7 @@ public class SessionSocketImpl implements SessionSocket {
     @Override
     public void connect() {
         socket.connect();
+        System.out.println("Connect socket with url: " + url);
     }
 
     @Override
