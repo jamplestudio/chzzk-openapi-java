@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 @Getter
 public class SessionSocketImpl implements SessionSocket {
@@ -35,6 +36,11 @@ public class SessionSocketImpl implements SessionSocket {
         options.transports = new String[]{"websocket"};
 
         socket = IO.socket(url, options);
+
+        // 연결
+        socket.on("connect", objects -> {
+            System.out.println("Connect Status: " + Arrays.toString(objects));
+        });
 
         // 이벤트 바인드
         socket.on("SYSTEM", objects -> {
