@@ -111,6 +111,7 @@ public class SessionSocketImpl implements SessionSocket {
     @Override
     public void disconnect() {
         socket.disconnect();
+        System.out.println("Disconnect socket with Session Key: " + sessionKey);
     }
 
     @Override
