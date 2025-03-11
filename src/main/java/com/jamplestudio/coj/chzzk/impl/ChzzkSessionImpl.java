@@ -104,8 +104,11 @@ public class ChzzkSessionImpl implements ChzzkSession {
             throw new IllegalStateException("Session is not connected");
         }
 
-        chzzk.unsubscribeChat(socket.getSessionKey());
-        chzzk.unsubscribeDonation(socket.getSessionKey());
+        String sessionKey = socket.getSessionKey();
+        if (sessionKey != null) {
+            chzzk.unsubscribeChat(sessionKey);
+            chzzk.unsubscribeDonation(sessionKey);
+        }
 
         socket.disconnect();
         socket = null;
