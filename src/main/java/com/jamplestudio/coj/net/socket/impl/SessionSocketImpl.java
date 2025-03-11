@@ -98,7 +98,6 @@ public class SessionSocketImpl implements SessionSocket {
 
             String json = objects[0].toString();
             DonationMessage message = Constants.GSON.fromJson(json, DonationMessage.class);
-            System.out.println("Donation Event: " + message);
             handler.onDonationMessageReceived(this, message);
         });
     }
