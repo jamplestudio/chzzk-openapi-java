@@ -66,8 +66,13 @@ public class ChzzkSessionImpl implements ChzzkSession {
 
                 @Override
                 public void onConnected(@NotNull SessionSocket session, @NotNull ConnectedMessage message) {
-                    chzzk.subscribeChat(message.data().sessionKey());
-                    chzzk.subscribeDonation(message.data().sessionKey());
+                    String sessionKey = session.getSessionKey();
+                    if (sessionKey == null || sessionKey.isEmpty()) {
+                        throw new RuntimeException("Session key must no be null or empty");
+                    }
+
+                    chzzk.subscribeChat(sessionKey);
+                    chzzk.subscribeDonation(sessionKey);
                 }
 
                 @Override
