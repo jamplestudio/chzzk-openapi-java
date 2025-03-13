@@ -68,7 +68,8 @@ public class ChzzkSessionImpl implements ChzzkSession {
                 public void onConnected(@NotNull SessionSocket session, @NotNull ConnectedMessage message) {
                     String sessionKey = session.getSessionKey();
                     if (sessionKey == null || sessionKey.isEmpty()) {
-                        throw new RuntimeException("Session key must no be null or empty");
+                        System.out.println("Session key must not be null or empty");
+                        return;
                     }
 
                     chzzk.subscribeChat(sessionKey);
