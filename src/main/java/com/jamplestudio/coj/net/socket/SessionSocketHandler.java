@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 public interface SessionSocketHandler {
 
+    default void onInvalidResponse(@NotNull SessionSocket session, @NotNull Object[] response) {}
+
     default void onConnected(@NotNull SessionSocket session, @NotNull ConnectedMessage message) {}
 
     default void onEventSubscribed(@NotNull SessionSocket session, @NotNull EventSubscribedMessage message) {}

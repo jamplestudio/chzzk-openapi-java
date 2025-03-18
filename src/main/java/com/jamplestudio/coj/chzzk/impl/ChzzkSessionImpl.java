@@ -14,6 +14,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -64,6 +65,12 @@ public class ChzzkSessionImpl implements ChzzkSession {
 
             ChzzkSessionUrl url = opt.get();
             socket = new SessionSocketImpl(url.url(), new SessionSocketHandler() {
+
+                @Override
+                public void onInvalidResponse(@NotNull SessionSocket session, @NotNull Object[] response) {
+                    session.disconnect();
+                    System.out.println("Receive invalid response (" + Arrays.toString(response) + "). disconnecting.");
+                }
 
                 @Override
                 public void onConnected(@NotNull SessionSocket session, @NotNull ConnectedMessage message) {
