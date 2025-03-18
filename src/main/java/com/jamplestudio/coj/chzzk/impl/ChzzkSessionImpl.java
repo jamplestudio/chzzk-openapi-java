@@ -58,7 +58,8 @@ public class ChzzkSessionImpl implements ChzzkSession {
         try {
             Optional<ChzzkSessionUrl> opt = chzzk.getSessionUrl();
             if (opt.isEmpty()) {
-                throw new RuntimeException("No session url found");
+                disconnect();
+                throw new RuntimeException("No session url found. disconnecting.");
             }
 
             ChzzkSessionUrl url = opt.get();
