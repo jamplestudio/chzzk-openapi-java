@@ -44,9 +44,8 @@ public class SessionSocketImpl implements SessionSocket {
 
         // 이벤트 바인드
         socket.on("SYSTEM", objects -> {
-            System.out.println("System Status: " + Arrays.toString(objects));
-
             if (objects.length == 0) {
+                handler.onInvalidResponse(this, objects);
                 return;
             }
 
@@ -55,6 +54,7 @@ public class SessionSocketImpl implements SessionSocket {
             JsonObject object = element.getAsJsonObject();
 
             if (!object.has("type")) {
+                handler.onInvalidResponse(this, objects);
                 return;
             }
 
