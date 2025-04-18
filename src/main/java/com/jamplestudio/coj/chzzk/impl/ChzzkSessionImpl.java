@@ -68,8 +68,8 @@ public class ChzzkSessionImpl implements ChzzkSession {
 
                 @Override
                 public void onInvalidResponse(@NotNull SessionSocket session, @NotNull Object[] response) {
-                    session.disconnect();
                     System.out.println("Receive invalid response (" + Arrays.toString(response) + "). disconnecting.");
+                    session.disconnect();
                 }
 
                 @Override
