@@ -10,6 +10,7 @@ import com.jamplestudio.coj.net.data.message.*;
 import com.jamplestudio.coj.net.socket.SessionSocket;
 import com.jamplestudio.coj.net.socket.SessionSocketHandler;
 import com.jamplestudio.coj.net.socket.impl.SessionSocketImpl;
+import com.jamplestudio.coj.utils.Logger;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,8 +60,9 @@ public class ChzzkSessionImpl implements ChzzkSession {
         try {
             Optional<ChzzkSessionUrl> opt = chzzk.getSessionUrl();
             if (opt.isEmpty()) {
+                Logger.error("No session url found. disconnecting.");
                 disconnect();
-                throw new RuntimeException("No session url found. disconnecting.");
+                return;
             }
 
             ChzzkSessionUrl url = opt.get();
@@ -68,7 +70,7 @@ public class ChzzkSessionImpl implements ChzzkSession {
 
                 @Override
                 public void onInvalidResponse(@NotNull SessionSocket session, @NotNull Object[] response) {
-                    System.out.println("Receive invalid response (" + Arrays.toString(response) + "). disconnecting.");
+                    Logger.error("Receive invalid response (" + Arrays.toString(response) + "). disconnecting.");
                     session.disconnect();
                 }
 
@@ -76,7 +78,7 @@ public class ChzzkSessionImpl implements ChzzkSession {
                 public void onConnected(@NotNull SessionSocket session, @NotNull ConnectedMessage message) {
                     String sessionKey = session.getSessionKey();
                     if (sessionKey == null || sessionKey.isEmpty()) {
-                        System.out.println("Session key must not be null or empty. disconnecting.");
+                        Logger.error("Session key must not be null or empty. disconnecting.");
                         session.disconnect();
                         return;
                     }
@@ -116,7 +118,8 @@ public class ChzzkSessionImpl implements ChzzkSession {
     @Override
     public void disconnect() {
         if (socket == null) {
-            throw new IllegalStateException("Session is not connected");
+            Logger.error("Session is not connected");
+            return;
         }
 
         try {
